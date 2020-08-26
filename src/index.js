@@ -1,8 +1,9 @@
 import codeSVG from '@plone/volto/icons/code.svg';
-import { TabsBlockEdit, TabsBlockView } from './Tabs';
-import { TABSBLOCK } from './constants';
+import { GridBlockEdit, GridBlockView } from './Tabs';
+import { GRIDBLOCK } from './constants';
 import { tabs_block, content } from './reducers';
 
+console.log('alalala', GRIDBLOCK, GridBlockEdit, GridBlockView);
 export default (config) => {
   // config.blocks.blocksConfig[TABSBLOCK] = {
   //   id: TABSBLOCK,
@@ -19,13 +20,13 @@ export default (config) => {
   //     view: [],
   //   },
   // };
-  config.blocks.blocksConfig['GRIDBLOCK'] = {
+  config.blocks.blocksConfig[GRIDBLOCK] = {
     id: GRIDBLOCK,
-    title: 'Section',
+    title: 'Grid block',
     icon: codeSVG,
     group: 'text',
-    view: TabsBlockView,
-    edit: TabsBlockEdit,
+    view: GridBlockView,
+    edit: GridBlockEdit,
     restricted: false,
     mostUsed: true,
     sidebarTab: 1,
@@ -33,11 +34,6 @@ export default (config) => {
       addPermission: [],
       view: [],
     },
-  };
-  config.addonReducers = {
-    ...config.addonReducers,
-    tabs_block,
-    content, // We're overwriting the default content reducer
   };
   return config;
 };

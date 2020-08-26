@@ -15,7 +15,7 @@ import {
   tabsLayoutToBlocksLayout,
   isEqual,
 } from './utils';
-import TabsBlockView from './TabsBlockView';
+import TabsBlockView from './TabsBlockViewold';
 import schema from './schema';
 import { settings } from '~/config';
 
@@ -300,7 +300,7 @@ class EditTabsBlock extends React.Component {
 export default connect(
   (state) => {
     return {
-      tabsState: state.tabs_block[state.router.location.key] || {},
+      tabsState: state.tabs_block?.[state.router.location.key] || {},
       content: state.content,
     };
   },

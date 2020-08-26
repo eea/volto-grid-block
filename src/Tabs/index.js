@@ -1,2 +1,2 @@
-export TabsBlockEdit from './TabsBlockEdit';
-export TabsBlockView from './TabsBlockView';
+export GridBlockEdit from './GridBlockEdit';
+export GridBlockView from './GridBlockView';
