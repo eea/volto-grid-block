@@ -8,5 +8,6 @@
     "bootstrap": "./bootstrap"
   },
   "author": "European Environment Agency: IDM2 A-Team",
-  "license": "MIT"
+  "license": "MIT",
+  "dependencies": {}
 }

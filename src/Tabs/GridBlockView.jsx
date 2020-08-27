@@ -8,10 +8,13 @@ import { Icon, SidebarPortal, TextWidget } from '@plone/volto/components';
 import { Segment } from 'semantic-ui-react';
 import { blocks } from '~/config';
 import '../less/gridLayout.less';
+// import { useFormStateContext } from '@plone/volto/components/manage/Form/FormContext';
 
 const GridBlockView = (props) => {
   if (!__CLIENT__) return '';
   console.log('props in view', props.data);
+  // const context = useFormStateContext();
+  // console.log(context);
 
   const viewBlock = (block) => {
     // const { formData } = this.state; // destructuring
@@ -39,9 +42,8 @@ const GridBlockView = (props) => {
       <div
         style={{
           padding: '.5rem',
-          border: '1px dashed black',
         }}
-        className="column column-six"
+        className={`column column-six ${block.className}`}
       >
         {viewBlock(props.data.blocksData.blocks[block.id])}
       </div>
