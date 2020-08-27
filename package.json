@@ -9,5 +9,7 @@
   },
   "author": "European Environment Agency: IDM2 A-Team",
   "license": "MIT",
-  "dependencies": {}
+  "dependencies": {
+    "react-resizable": "^1.10.1"
+  }
 }

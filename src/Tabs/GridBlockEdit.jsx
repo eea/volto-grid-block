@@ -9,7 +9,8 @@ import { Segment } from 'semantic-ui-react';
 import { blocks } from '~/config';
 import '../less/gridLayout.less';
 
-import { ListManager } from 'react-beautiful-dnd-grid';
+// import { ListManager } from 'react-beautiful-dnd-grid';
+import { Resizable, ResizableBox } from 'react-resizable';
 
 const RenderEditBlock = ({
   block,
@@ -247,7 +248,8 @@ const GridBlockEdit = (props) => {
     const blocksLayout = JSON.parse(JSON.stringify(blocksData.blocks_layout));
     const newBlocksLayout = blocksLayout.map((item) => ({
       ...item,
-      className: item.id === block.id ? className : '',
+      className:
+        item.id === block.id ? className : item.className ? item.className : '',
     }));
     console.log('newblockslayout', newBlocksLayout);
     // setState((prev) =>
