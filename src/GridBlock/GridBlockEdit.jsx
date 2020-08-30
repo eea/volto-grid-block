@@ -300,6 +300,10 @@ const GridBlockEdit = (props) => {
                             blocksData.blocks_layout.rows[row]
                               .grid_row_classname,
                           )}
+                          style={{
+                            ...(blocksData.blocks_layout.rows[row]
+                              .grid_row_inline_style || {}),
+                          }}
                         >
                           {blocksData.blocks_layout.rows[row]?.items?.length
                             ? blocksData.blocks_layout.rows[row].items.map(

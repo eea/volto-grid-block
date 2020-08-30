@@ -4,7 +4,7 @@ import { Button, Input, Modal } from 'semantic-ui-react';
 const GridBlockModal = (props) => {
   const nop = () => {};
   const { setOpen = nop, onChange = nop, data = {}, open = false } = props;
-  const [className, setClassName] = useState(data.classname || '');
+  const [className, setClassName] = useState(data.className || '');
   return (
     <Modal
       className="grid-block-modal"
