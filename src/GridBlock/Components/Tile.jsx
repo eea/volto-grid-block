@@ -1,8 +1,10 @@
 import React from 'react';
-import { blocks } from '~/config';
-import { withFormStateContext } from '@plone/volto/components/manage/Form/FormContext';
-import { TileControl } from 'volto-grid-block/GridBlock/Components';
 import cx from 'classnames';
+import { withFormStateContext } from '@plone/volto/components/manage/Form/FormContext';
+
+import { blocks } from '~/config';
+
+import TileControl from './TileControl';
 
 const Tile = ({
   context,

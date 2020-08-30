@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Icon, BlockChooser } from '@plone/volto/components';
+import { BlockChooser } from '@plone/volto/components';
 import { withFormStateContext } from '@plone/volto/components/manage/Form/FormContext';
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 import { Button } from 'semantic-ui-react';
@@ -12,10 +12,10 @@ import {
   RowToolbar,
   RowModal,
   GridBlockModal,
-} from 'volto-grid-block/GridBlock/Components';
-import { reorder, getColumnLayout } from 'volto-grid-block/GridBlock/utils';
+} from './Components';
+import { reorder, getColumnLayout } from './utils';
 
-import 'volto-grid-block/less/gridLayout.less';
+import '@eeacms/volto-grid-block/less/gridLayout.less';
 
 const GridBlockEdit = (props) => {
   const [selectedBlock, setSelectedBlock] = useState({});

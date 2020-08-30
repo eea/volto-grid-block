@@ -1,5 +1,5 @@
 import codeSVG from '@plone/volto/icons/code.svg';
-import { GridBlockEdit, GridBlockView } from 'volto-grid-block/GridBlock';
+import { GridBlockEdit, GridBlockView } from './GridBlock';
 import { GRIDBLOCK } from './constants';
 
 export default (config) => {
