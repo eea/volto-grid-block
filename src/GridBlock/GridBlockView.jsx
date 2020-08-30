@@ -1,8 +1,10 @@
 import React from 'react';
 import cx from 'classnames';
 import { blocks } from '~/config';
-import { getColumnLayout } from 'volto-grid-block/GridBlock/utils';
+import { getColumnLayout } from './utils';
+
 import '../less/gridLayout.less';
+
 const GridBlockView = (props) => {
   const {
     blocksData = { blocks: {}, blocks_layout: { rows: {}, items: [] } },
