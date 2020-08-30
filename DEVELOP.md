@@ -1,6 +1,6 @@
-# volto-tabs-block
+# volto-grid-block
 
-This addon enables ad-hoc grouping of Volto blocks under sections and tabs
+This addon enables grid layout grouping of Volto blocks
 
 ## Develop
 
@@ -27,11 +27,11 @@ Before starting make sure your development environment is properly set. See [Vol
             },
 
             "addons": [
-                "@eeacms/volto-tabs-block"
+                "eea/volto-grid-block"
             ],
 
             "dependencies": {
-                "@plone/volto": "github:eea/volto#7.8.2-beta.2"
+                "@plone/volto": "github:eea/volto#7.11.1-beta.1"
             }
         }
 
@@ -39,8 +39,7 @@ Before starting make sure your development environment is properly set. See [Vol
 
         {
             "volto-tabs-block": {
-                "url": "https://github.com/eea/volto-tabs-block.git",
-                "package": "@eeacms/volto-tabs-block",
+                "url": "https://github.com/eea/volto-grid-block.git",
                 "branch": "develop",
                 "path": "src"
             }
@@ -69,4 +68,4 @@ Before starting make sure your development environment is properly set. See [Vol
 
 1. Happy hacking!
 
-        $ cd src/addons/volto-tabs-block/
+        $ cd src/addons/volto-grid-block/

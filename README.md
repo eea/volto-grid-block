@@ -1,12 +1,8 @@
-# volto-tabs-block
+# volto-grid-block
 
-[![Releases](https://img.shields.io/github/v/release/eea/volto-tabs-block)](https://github.com/eea/volto-tabs-block/releases)
+[![Releases](https://img.shields.io/github/v/release/eea/volto-grid-block)](https://github.com/eea/volto-grid-block/releases)
 
-This addon enables ad-hoc grouping of Volto blocks under sections and tabs. It needs to run with the [Form State Context PR](https://github.com/plone/volto/pull/1711) from Volto. It introduces a "tabs block" which can be used, from the Edit form, to switch between the visible blocks of that tab page. This is achieved by manipulating the form context blocks_layout from the tabs block, made possible once the Form state is exposed as a context. In View mode it manipulates the visible content on the page through changes in the `content` global state reducer.
-
-See demo video below:
-
-[![Short demo](https://img.youtube.com/vi/iTaPsWLGTSQ/0.jpg)](https://www.youtube.com/watch?v=iTaPsWLGTSQ)
+This addon enables grid layout grouping of Volto blocks. It introduces a "grid block" which can be used, from the Edit form, to group other blocks. It uses a flex based layout with column css classes. Ex. 'xs-12 sm-6 md-4 lg-3'
 
 ## Getting started
 
@@ -20,12 +16,12 @@ See demo video below:
 1. Update `package.json`:
     ``` JSON
     "addons": [
-        "@eeacms/volto-tabs-block"
+        "eea/volto-grid-block"
     ],
 
     "dependencies": {
-        "@plone/volto": "github:eea/volto#7.8.2-beta.2",
-        "@eeacms/volto-tabs-block": "github:eea/volto-tabs-block#0.2.0"
+        "@plone/volto": "github:eea/volto#7.11.1-beta.1",
+        "eea/volto-tabs-block": "github:eea/volto-grid-block#0.1.0"
     }
     ```
 

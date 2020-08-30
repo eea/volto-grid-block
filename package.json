@@ -1,7 +1,7 @@
 {
   "name": "@eeacms/volto-tabs-block",
-  "version": "0.2.1",
-  "description": "A Volto block that provides tabs for regular composite pages",
+  "version": "0.1.0",
+  "description": "A Volto block that provides a grid layout for composite page",
   "main": "src/index.js",
   "scripts": {
     "release": "release-it",
