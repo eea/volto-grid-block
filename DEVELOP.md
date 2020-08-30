@@ -27,7 +27,7 @@ Before starting make sure your development environment is properly set. See [Vol
             },
 
             "addons": [
-                "eea/volto-grid-block"
+                "@eeacms/volto-grid-block"
             ],
 
             "dependencies": {
@@ -38,10 +38,11 @@ Before starting make sure your development environment is properly set. See [Vol
 1. Add the following to `mrs.developer.json`:
 
         {
-            "volto-tabs-block": {
+            "volto-grid-block": {
                 "url": "https://github.com/eea/volto-grid-block.git",
                 "branch": "develop",
-                "path": "src"
+                "path": "src",
+                "package": "@eeacms/volto-grid-block"
             }
         }
 
