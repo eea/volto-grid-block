@@ -4,17 +4,9 @@ import { withFormStateContext } from '@plone/volto/components/manage/Form/FormCo
 
 import { blocks } from '~/config';
 
-import TileControl from './TileControl';
-
-const Tile = ({
+const Block = ({
   context,
   setSelectedBlock,
-  setBlocksData,
-  setBlockChooser,
-  setOpenTileModal,
-  blockChooser,
-  selectedBlock,
-  blocksData,
   block,
   index,
   properties,
@@ -24,10 +16,7 @@ const Tile = ({
   isObjectBrowserOpen,
   onChangeBlock,
   onMutateBlock,
-  onAddBlock,
-  onDeleteBlock,
   onSelectItem,
-  setOpenBlockEditModal,
 }) => {
   let Block = null;
   let type = block['@type'];
@@ -70,22 +59,12 @@ const Tile = ({
           data={block}
           pathname={pathname}
           block={block.id}
-          selected={selectedBlock.id === block.id}
+          selected={true}
           manage={true}
         />
       ) : null}
-      <TileControl
-        blockView={!!Block}
-        setSelectedBlock={setSelectedBlock}
-        setBlockChooser={setBlockChooser}
-        setOpenTileModal={setOpenTileModal}
-        blockChooser={blockChooser}
-        block={block}
-        onDeleteBlock={onDeleteBlock}
-        setOpenBlockEditModal={setOpenBlockEditModal}
-      />
     </div>
   );
 };
 
-export default withFormStateContext(Tile);
+export default withFormStateContext(Block);
