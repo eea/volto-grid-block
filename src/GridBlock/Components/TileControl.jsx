@@ -6,6 +6,7 @@ import substractSVG from '@plone/volto/icons/circle-minus.svg';
 import themeSVG from '@plone/volto/icons/theme.svg';
 import deleteSVG from '@plone/volto/icons/delete.svg';
 import editingSVG from '@plone/volto/icons/editing.svg';
+import contentSVG from '@plone/volto/icons/content.svg';
 
 const TileControl = (props) => {
   const nop = () => {};
@@ -16,6 +17,7 @@ const TileControl = (props) => {
     onDeleteBlock = nop,
     blockChooser = false,
     block = {},
+    setOpenBlockEditModal,
   } = props;
   if (props.blockView) {
     return (
@@ -25,6 +27,15 @@ const TileControl = (props) => {
           size="20"
           color="#4296B3"
           onClick={() => setSelectedBlock(block)}
+        />
+        <Icon
+          name={contentSVG}
+          size="20"
+          color="#4296B3"
+          onClick={() => {
+            setSelectedBlock(block);
+            setOpenBlockEditModal(true);
+          }}
         />
         <Icon
           name={themeSVG}
@@ -51,15 +62,17 @@ const TileControl = (props) => {
   return (
     <div className="block-edit-control mt-1">
       {!blockChooser ? (
-        <Icon
-          name={addSVG}
-          size="20"
-          color="#4296B3"
-          onClick={() => {
-            setSelectedBlock(block);
-            setBlockChooser(true);
-          }}
-        />
+        <>
+          <Icon
+            name={addSVG}
+            size="20"
+            color="#4296B3"
+            onClick={() => {
+              setSelectedBlock(block);
+              setBlockChooser(true);
+            }}
+          />
+        </>
       ) : (
         <Icon
           name={substractSVG}
