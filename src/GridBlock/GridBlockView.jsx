@@ -20,7 +20,7 @@ const GridBlockView = (props) => {
       <Block
         key={block.id}
         id={block.id}
-        propertie={props.properties}
+        properties={props.properties}
         data={block}
         path={props.path}
       />
