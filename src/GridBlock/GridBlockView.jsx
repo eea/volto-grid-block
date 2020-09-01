@@ -5,27 +5,37 @@ import { getColumnLayout } from './utils';
 
 import '../less/gridLayout.less';
 
+const Tile = React.memo((props) => {
+  const { block } = props;
+  let Block = null;
+  let type = block['@type'];
+  Block = blocks.blocksConfig?.[type]?.view;
+
+  return Block ? (
+    <Block
+      key={block.id}
+      id={block.id}
+      properties={props.properties}
+      data={block}
+      path={props.path}
+    />
+  ) : null;
+});
+
 const GridBlockView = (props) => {
   const {
     blocksData = { blocks: {}, blocks_layout: { rows: {}, items: [] } },
     className = '',
   } = props.data;
 
-  const Tile = ({ block }) => {
-    let Block = null;
-    let type = block['@type'];
-    Block = blocks.blocksConfig?.[type]?.view;
+  React.useEffect(() => {
+    console.log('MOUNTING GRID');
+    /* eslint-disable-next-line */
+    return  () => {
+      console.log('UNMOUNTING GRID');
+    };
+  }, []);
 
-    return Block ? (
-      <Block
-        key={block.id}
-        id={block.id}
-        properties={props.properties}
-        data={block}
-        path={props.path}
-      />
-    ) : null;
-  };
   if (!__CLIENT__) return '';
   return (
     <div className={cx('grid-layout', className)}>
@@ -46,6 +56,7 @@ const GridBlockView = (props) => {
                 ? blocksData.blocks_layout.rows[row].items.map(
                     (block, blockIndex) => (
                       <div
+                        key={`view-${block}`}
                         className={cx(
                           'column',
                           getColumnLayout(
@@ -61,7 +72,7 @@ const GridBlockView = (props) => {
                             : {}
                         }
                       >
-                        <Tile block={blocksData.blocks[block]} />
+                        <Tile {...props} block={blocksData.blocks[block]} />
                       </div>
                     ),
                   )
