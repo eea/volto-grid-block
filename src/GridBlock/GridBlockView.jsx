@@ -28,14 +28,6 @@ const GridBlockView = (props) => {
     className = '',
   } = props.data;
 
-  React.useEffect(() => {
-    console.log('MOUNTING GRID');
-    /* eslint-disable-next-line */
-    return  () => {
-      console.log('UNMOUNTING GRID');
-    };
-  }, []);
-
   if (!__CLIENT__) return '';
   return (
     <div className={cx('grid-layout', className)}>
