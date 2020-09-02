@@ -26,11 +26,15 @@ const GridBlockView = (props) => {
   const {
     blocksData = { blocks: {}, blocks_layout: { rows: {}, items: [] } },
     className = '',
+    inlineStyle = {},
   } = props.data;
 
   if (!__CLIENT__) return '';
   return (
-    <div className={cx('grid-layout', className)}>
+    <div
+      className={cx('grid-layout', className)}
+      style={{ ...(inlineStyle || {}) }}
+    >
       {blocksData.blocks_layout?.items?.length
         ? blocksData.blocks_layout.items.map((row, rowIndex) => (
             <div

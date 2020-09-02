@@ -31,6 +31,7 @@ const GridBlockEdit = (props) => {
   );
 
   const className = props.data.className || '';
+  const inlineStyle = props.data.inlineStyle || '';
   const initialBlock = uuid();
   const initialRow = uuid();
   const initialState = props.data?.blocksData
@@ -287,7 +288,10 @@ const GridBlockEdit = (props) => {
   return (
     <div className="grid-block">
       <DragDropContext onDragEnd={onDragEnd}>
-        <div className={cx('grid-layout edit', className)}>
+        <div
+          className={cx('grid-layout edit', className)}
+          style={{ ...(inlineStyle || {}) }}
+        >
           {blocksData.blocks_layout.items?.length
             ? blocksData.blocks_layout.items.map((row, rowIndex) => (
                 <div key={`row-${row}`} className="row edit">
@@ -341,7 +345,7 @@ const GridBlockEdit = (props) => {
                                         {...providedBlock.dragHandleProps}
                                       >
                                         <Tile
-                                          context={{ ...props }}
+                                          {...props}
                                           setSelectedRow={setSelectedRow}
                                           setSelectedBlock={setSelectedBlock}
                                           setBlockChooser={setBlockChooser}
@@ -355,15 +359,6 @@ const GridBlockEdit = (props) => {
                                           index={blockIndex}
                                           properties={props.properties}
                                           pathname={props.pathname}
-                                          openObjectBrowser={
-                                            props.openObjectBrowser
-                                          }
-                                          closeObjectBrowser={
-                                            props.closeObjectBrowser
-                                          }
-                                          isObjectBrowserOpen={
-                                            props.isObjectBrowserOpen
-                                          }
                                           onSelectItem={onSelectItem}
                                           onMutateBlock={onMutateBlock}
                                           onChangeBlock={onChangeBlock}

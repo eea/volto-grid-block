@@ -6,16 +6,13 @@ import { blocks } from '~/config';
 
 import TileControl from './TileControl';
 
-const Tile = React.memo(
-  ({
-    context,
+const Tile = React.memo((props) => {
+  const {
     setSelectedBlock,
-    setBlocksData,
     setBlockChooser,
     setOpenTileModal,
     blockChooser,
     selectedBlock,
-    blocksData,
     block,
     index,
     properties,
@@ -23,71 +20,73 @@ const Tile = React.memo(
     openObjectBrowser,
     closeObjectBrowser,
     isObjectBrowserOpen,
+    onSelectBlock,
+    handleKeyDown,
     onChangeBlock,
     onMutateBlock,
     onAddBlock,
     onDeleteBlock,
     onSelectItem,
     setOpenBlockEditModal,
-  }) => {
-    let Block = null;
-    let type = block['@type'];
-    Block = blocks.blocksConfig?.[type]?.edit;
-    let nop = () => {};
+  } = props;
+  let Block = null;
+  let type = block['@type'];
+  Block = blocks.blocksConfig?.[type]?.edit;
+  let nop = () => {};
 
-    return (
-      <div
-        className={cx(
-          'block-edit-wrapper ui rised segment',
-          block.grid_block_classname,
-        )}
-        style={{
-          ...(block.grid_block_inline_style || {}),
-        }}
-      >
-        {Block ? (
-          <Block
-            id={block.id}
-            index={index}
-            type={block['@type']}
-            key={block.id}
-            handleKeyDown={nop}
-            onAddBlock={nop}
-            onChangeBlock={onChangeBlock}
-            onMutateBlock={onMutateBlock}
-            onChangeField={nop}
-            onDeleteBlock={nop}
-            onSelectBlock={nop}
-            onMoveBlock={nop}
-            onFocusPreviousBlock={nop}
-            onFocusNextBlock={nop}
-            openObjectBrowser={() => {
-              setSelectedBlock(block);
-              openObjectBrowser({ onSelectItem });
-            }}
-            closeObjectBrowser={closeObjectBrowser}
-            properties={properties}
-            isObjectBrowserOpen={isObjectBrowserOpen}
-            data={block}
-            pathname={pathname}
-            block={block.id}
-            selected={selectedBlock.id === block.id}
-            manage={true}
-          />
-        ) : null}
-        <TileControl
-          blockView={!!Block}
-          setSelectedBlock={setSelectedBlock}
-          setBlockChooser={setBlockChooser}
-          setOpenTileModal={setOpenTileModal}
-          blockChooser={blockChooser}
-          block={block}
-          onDeleteBlock={onDeleteBlock}
-          setOpenBlockEditModal={setOpenBlockEditModal}
+  return (
+    <div
+      className={cx(
+        'block-edit-wrapper ui rised segment',
+        block.grid_block_classname,
+      )}
+      style={{
+        ...(block.grid_block_inline_style || {}),
+      }}
+    >
+      {Block ? (
+        <Block
+          id={block.id}
+          index={index}
+          type={block['@type']}
+          key={block.id}
+          handleKeyDown={handleKeyDown}
+          onAddBlock={onAddBlock}
+          onChangeBlock={onChangeBlock}
+          onMutateBlock={onMutateBlock}
+          onChangeField={props.onChangeField}
+          onDeleteBlock={props.onDeleteBlock}
+          onSelectBlock={onSelectBlock}
+          onMoveBlock={props.onMoveBlock}
+          onFocusPreviousBlock={props.onFocusPreviousBlock}
+          onFocusNextBlock={props.onFocusNextBlock}
+          openObjectBrowser={() => {
+            setSelectedBlock(block);
+            openObjectBrowser({ onSelectItem });
+          }}
+          closeObjectBrowser={closeObjectBrowser}
+          properties={properties}
+          isObjectBrowserOpen={isObjectBrowserOpen}
+          data={block}
+          pathname={pathname}
+          block={block.id}
+          selected={selectedBlock.id === block.id}
+          manage={true}
+          toolbarAlways={true}
         />
-      </div>
-    );
-  },
-);
+      ) : null}
+      <TileControl
+        blockView={!!Block}
+        setSelectedBlock={setSelectedBlock}
+        setBlockChooser={setBlockChooser}
+        setOpenTileModal={setOpenTileModal}
+        blockChooser={blockChooser}
+        block={block}
+        onDeleteBlock={onDeleteBlock}
+        setOpenBlockEditModal={setOpenBlockEditModal}
+      />
+    </div>
+  );
+});
 
 export default withFormStateContext(Tile);
