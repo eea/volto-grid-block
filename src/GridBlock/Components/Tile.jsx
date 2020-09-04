@@ -6,32 +6,34 @@ import { blocks } from '~/config';
 
 import TileControl from './TileControl';
 
-const Tile = ({
-  context,
-  setSelectedBlock,
-  setBlocksData,
-  setBlockChooser,
-  setOpenTileModal,
-  blockChooser,
-  selectedBlock,
-  blocksData,
-  block,
-  index,
-  properties,
-  pathname,
-  openObjectBrowser,
-  closeObjectBrowser,
-  isObjectBrowserOpen,
-  onChangeBlock,
-  onMutateBlock,
-  onAddBlock,
-  onDeleteBlock,
-  onSelectItem,
-}) => {
+const Tile = React.memo((props) => {
+  const {
+    setSelectedBlock,
+    setBlockChooser,
+    setOpenTileModal,
+    blockChooser,
+    selectedBlock,
+    block,
+    index,
+    properties,
+    pathname,
+    openObjectBrowser,
+    closeObjectBrowser,
+    isObjectBrowserOpen,
+    onSelectBlock,
+    handleKeyDown,
+    onChangeBlock,
+    onMutateBlock,
+    onAddBlock,
+    onDeleteBlock,
+    onSelectItem,
+    setOpenBlockEditModal,
+  } = props;
   let Block = null;
   let type = block['@type'];
   Block = blocks.blocksConfig?.[type]?.edit;
   let nop = () => {};
+
   return (
     <div
       className={cx(
@@ -48,16 +50,16 @@ const Tile = ({
           index={index}
           type={block['@type']}
           key={block.id}
-          handleKeyDown={nop}
-          onAddBlock={nop}
+          handleKeyDown={handleKeyDown}
+          onAddBlock={onAddBlock}
           onChangeBlock={onChangeBlock}
           onMutateBlock={onMutateBlock}
-          onChangeField={nop}
-          onDeleteBlock={nop}
-          onSelectBlock={nop}
-          onMoveBlock={nop}
-          onFocusPreviousBlock={nop}
-          onFocusNextBlock={nop}
+          onChangeField={props.onChangeField}
+          onDeleteBlock={props.onDeleteBlock}
+          onSelectBlock={onSelectBlock}
+          onMoveBlock={props.onMoveBlock}
+          onFocusPreviousBlock={props.onFocusPreviousBlock}
+          onFocusNextBlock={props.onFocusNextBlock}
           openObjectBrowser={() => {
             setSelectedBlock(block);
             openObjectBrowser({ onSelectItem });
@@ -70,6 +72,7 @@ const Tile = ({
           block={block.id}
           selected={selectedBlock.id === block.id}
           manage={true}
+          toolbarAlways={true}
         />
       ) : null}
       <TileControl
@@ -80,9 +83,10 @@ const Tile = ({
         blockChooser={blockChooser}
         block={block}
         onDeleteBlock={onDeleteBlock}
+        setOpenBlockEditModal={setOpenBlockEditModal}
       />
     </div>
   );
-};
+});
 
 export default withFormStateContext(Tile);

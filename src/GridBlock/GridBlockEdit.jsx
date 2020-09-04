@@ -5,6 +5,7 @@ import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 import { Button } from 'semantic-ui-react';
 import { v4 as uuid } from 'uuid';
 import cx from 'classnames';
+import BlockEditorModal from './Components/BlockEditorModal';
 
 import {
   Tile,
@@ -24,7 +25,13 @@ const GridBlockEdit = (props) => {
   const [openRowModal, setOpenRowModal] = useState(false);
   const [openTileModal, setOpenTileModal] = useState(false);
   const [openBlockModal, setOpenBlockModal] = useState(false);
+  const [openBlockEditModal, setOpenBlockEditModal] = useState(false);
+  const [actuallyOpenBlockEditModal, setActuallyOpenBlockEditModal] = useState(
+    false,
+  );
+
   const className = props.data.className || '';
+  const inlineStyle = props.data.inlineStyle || '';
   const initialBlock = uuid();
   const initialRow = uuid();
   const initialState = props.data?.blocksData
@@ -55,6 +62,14 @@ const GridBlockEdit = (props) => {
     });
     /* eslint-disable-next-line */
   }, [blocksData]);
+
+  useEffect(() => {
+    if (openBlockEditModal && selectedBlock) {
+      setActuallyOpenBlockEditModal(true);
+    } else {
+      setActuallyOpenBlockEditModal(false);
+    }
+  }, [openBlockEditModal, selectedBlock]);
 
   const onMutateBlock = (current, incoming) => {
     setBlocksData({
@@ -273,7 +288,10 @@ const GridBlockEdit = (props) => {
   return (
     <div className="grid-block">
       <DragDropContext onDragEnd={onDragEnd}>
-        <div className={cx('grid-layout edit', className)}>
+        <div
+          className={cx('grid-layout edit', className)}
+          style={{ ...(inlineStyle || {}) }}
+        >
           {blocksData.blocks_layout.items?.length
             ? blocksData.blocks_layout.items.map((row, rowIndex) => (
                 <div key={`row-${row}`} className="row edit">
@@ -327,7 +345,7 @@ const GridBlockEdit = (props) => {
                                         {...providedBlock.dragHandleProps}
                                       >
                                         <Tile
-                                          context={{ ...props }}
+                                          {...props}
                                           setSelectedRow={setSelectedRow}
                                           setSelectedBlock={setSelectedBlock}
                                           setBlockChooser={setBlockChooser}
@@ -341,20 +359,14 @@ const GridBlockEdit = (props) => {
                                           index={blockIndex}
                                           properties={props.properties}
                                           pathname={props.pathname}
-                                          openObjectBrowser={
-                                            props.openObjectBrowser
-                                          }
-                                          closeObjectBrowser={
-                                            props.closeObjectBrowser
-                                          }
-                                          isObjectBrowserOpen={
-                                            props.isObjectBrowserOpen
-                                          }
                                           onSelectItem={onSelectItem}
                                           onMutateBlock={onMutateBlock}
                                           onChangeBlock={onChangeBlock}
                                           onAddBlock={onAddBlock}
                                           onDeleteBlock={onDeleteBlock}
+                                          setOpenBlockEditModal={
+                                            setOpenBlockEditModal
+                                          }
                                         />
                                       </div>
                                     )}
@@ -442,6 +454,26 @@ const GridBlockEdit = (props) => {
               setOpen={setOpenBlockModal}
               onChange={onChange}
               data={props.data}
+            />
+          ) : (
+            ''
+          )}
+          {actuallyOpenBlockEditModal ? (
+            <BlockEditorModal
+              context={{ ...props }}
+              selectedBlock={selectedBlock}
+              block={blocksData.blocks[selectedBlock.id]}
+              setSelectedBlock={setSelectedBlock}
+              index={0}
+              properties={props.properties}
+              pathname={props.pathname}
+              openObjectBrowser={props.openObjectBrowser}
+              closeObjectBrowser={props.closeObjectBrowser}
+              isObjectBrowserOpen={props.isObjectBrowserOpen}
+              onSelectItem={onSelectItem}
+              onMutateBlock={onMutateBlock}
+              onChangeBlock={onChangeBlock}
+              onClose={setOpenBlockEditModal}
             />
           ) : (
             ''
