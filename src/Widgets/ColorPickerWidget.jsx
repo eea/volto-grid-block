@@ -23,7 +23,9 @@ const ColorPickerWidget = (props) => {
           toggle
           onChange={(event, data) => {
             if (props.value && data.checked) {
-              props.onChange(props.id, undefined);
+              props.onChange(props.id, 'transparent');
+            } else if (props.value === 'transparent') {
+              props.onChange(props.id, '#000000');
             }
             setTransparent(data.checked);
           }}

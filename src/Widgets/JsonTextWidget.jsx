@@ -18,7 +18,11 @@ const JsonTextWidget = (props) => {
         id={props.id}
         title={props.title}
         onChange={(field, data) => {
-          props.onChange(props.id, data);
+          let newData = data;
+          try {
+            newData = JSON.parse(data);
+          } catch {}
+          props.onChange(props.id, newData);
         }}
         value={getValue(props.value)}
       />

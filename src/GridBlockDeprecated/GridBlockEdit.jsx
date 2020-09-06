@@ -289,7 +289,7 @@ const GridBlockEdit = (props) => {
     <div className="grid-block">
       <DragDropContext onDragEnd={onDragEnd}>
         <div
-          className={cx('grid-layout edit', className)}
+          className={cx('grid-layout-deprecated edit', className)}
           style={{ ...(inlineStyle || {}) }}
         >
           {blocksData.blocks_layout.items?.length

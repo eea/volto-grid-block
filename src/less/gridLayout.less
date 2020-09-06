@@ -6,7 +6,7 @@
 
 .loadAddonVariables();
 
-.grid-layout {
+.grid-layout-deprecated {
   display: flex;
   flex-flow: row wrap;
   justify-content: inherit;
@@ -310,18 +310,23 @@
 }
 
 
-._grid-layout {
+.grid-layout {
   display: flex;
   flex-flow: row wrap;
   justify-content: inherit;
   align-items: flex-start;
   width: 100% !important;
   padding: 0rem;
-  border: 1px dashed #4296B3;
 
-  .grid-block {
-    border: 1px dashed #EC776A;
-    padding: 1em;
+  .block {
+    margin-bottom: 0;
+    height: 100%;
+    .block:not(.inner)::before {
+      z-index: 0;
+    }
+    &.selected {
+      margin-bottom: 0;
+    }
   }
 
   .row {
@@ -332,61 +337,39 @@
     width: 100%;
     text-align: left;
     position: relative;
+    &.ui.container {
+      display: flex!important;
+      flex-flow: row wrap!important;
+    }
     &.edit {
       // border: 1px dashed #4296B3;
       padding: 1em;
     }
   }
 
-  .block-edit-wrapper {
-    height: 100%;
-    min-height: 60px;
-    position: relative;
-    background: transparent !important;
-    box-shadow: 0px 1px 2px 0 #C7D5D8;
-    border-radius: 0;
-    border: 1px solid #C7D5D8;
-    .block-edit-control {
-      text-align: center;
-      .icon {
-        cursor: pointer;
-        &:hover {
-          opacity: 0.9;
-        }
-      }
-    }
-
-    .block.image {
-      height: 80% !important;
-      > img {
-        height: 100% !important;
-      }
-    }
+  .ui.basic.button.block-add-button {
+    left: -10px;
   }
 
-  .block-edit-toolbar {
-    background: #4296B3;
-    padding: 4px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    flex-flow: row;
-    .icon {
-      cursor: pointer;
-      &:hover {
-        opacity: 0.9;
-      }
+
+  .block.image {
+    margin-bottom: 0;
+    height: 100% !important;
+    > img {
+      height: 100% !important;
     }
   }
 
   .column {
+    position: relative;
     &[data-rbd-draggable-context-id] {
       margin-bottom: 0;
     }
     &.edit {
-      padding: 0.5em 1.5em;
+      padding: 1.5em 2em;
     }
   }
+
   &:not(.edit) {
     .block.image {
       height: 100%;
@@ -398,17 +381,45 @@
             height: 100%;
             img {
               height: 100% !important;
+              margin-left: 0 !important;
+              margin-right: 0 !important;
             }
           }
         }
       }
     }
   }
-
+  
   .drag.handle.star.wrapper {
     top: 20px;
     cursor: pointer;
   }
+
+  .drag.handle.star.wrapper,
+  .drag.handle.wrapper,
+  .ui.basic.icon.button.delete-button {
+    z-index: 9 !important;
+  }
+
+  .slate-editor {
+    display: inline-block;
+    width: 100%;
+  }
+
+  h1, h2, h3, h4, h5, p {
+    color: inherit !important;
+  }
+}
+
+.color-picker-widget {
+  .ui.toggle.checkbox .box:after,
+  .ui.toggle.checkbox label:after {
+    z-index: 1;
+  }
+}
+
+.ui.modal .image.content {
+  justify-content: center !important;
 }
 
 .loadAddonOverrides();

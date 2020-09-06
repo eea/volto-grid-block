@@ -32,7 +32,7 @@ const GridBlockView = (props) => {
   if (!__CLIENT__) return '';
   return (
     <div
-      className={cx('grid-layout', className)}
+      className={cx('grid-layout-deprecated', className)}
       style={{ ...(inlineStyle || {}) }}
     >
       {blocksData.blocks_layout?.items?.length
