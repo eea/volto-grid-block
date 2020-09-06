@@ -330,19 +330,23 @@ class GridBlockEdit extends React.Component {
   onChangeBlock(current, incoming) {
     return new Promise((resolve) => {
       const blocksData = { ...(this.state.blocksData || {}) };
-      const fakeSlate = { blocks: {}, id: null };
-      if (
-        blocksData.blocks?.[current]?.['@type'] !== incoming['@type'] &&
-        incoming['@type'] !== 'slate'
-      ) {
-        const newFakeSlate = getFakeSlate();
-        fakeSlate.blocks[newFakeSlate.block] = newFakeSlate.data;
-        fakeSlate.id = newFakeSlate.block;
-      }
-      const newBlocksLayoutItems = fakeSlate.id
-        ? [...blocksData.blocks_layout.items, fakeSlate.id]
-        : [...blocksData.blocks_layout.items];
-      console.log(current, incoming);
+      const newBlocksLayoutItems = [...blocksData.blocks_layout.items];
+      this.props.onChangeBlock(this.props.block, {
+        ...this.props.data,
+        blocksData: {
+          ...blocksData,
+          blocks: {
+            ...blocksData.blocks,
+            [current]: {
+              ...incoming,
+            },
+          },
+          blocks_layout: {
+            ...blocksData.blocks_layout,
+            items: [...newBlocksLayoutItems],
+          },
+        },
+      });
       this.setState(
         {
           blocksData: {
@@ -352,7 +356,6 @@ class GridBlockEdit extends React.Component {
               [current]: {
                 ...incoming,
               },
-              ...(fakeSlate.blocks || {}),
             },
             blocks_layout: {
               ...blocksData.blocks_layout,
@@ -361,7 +364,7 @@ class GridBlockEdit extends React.Component {
           },
         },
         () => {
-          this.updatePropsBlocksData();
+          // this.updatePropsBlocksData();
           resolve(current);
         },
       );
@@ -369,7 +372,57 @@ class GridBlockEdit extends React.Component {
   }
 
   onMutateBlock(current, incoming) {
-    this.onChangeBlock(current, incoming);
+    return new Promise((resolve) => {
+      const idTrailingBlock = uuid();
+      const blocksData = { ...(this.state.blocksData || {}) };
+      const newBlocksLayoutItems = [
+        ...blocksData.blocks_layout.items,
+        idTrailingBlock,
+      ];
+      this.props.onChangeBlock(this.props.block, {
+        ...this.props.data,
+        blocksData: {
+          ...blocksData,
+          blocks: {
+            ...blocksData.blocks,
+            [current]: {
+              ...incoming,
+            },
+            [idTrailingBlock]: {
+              '@type': settings.defaultBlockType,
+            },
+          },
+          blocks_layout: {
+            ...blocksData.blocks_layout,
+            items: [...newBlocksLayoutItems],
+          },
+        },
+      });
+      this.setState(
+        {
+          blocksData: {
+            ...blocksData,
+            blocks: {
+              ...blocksData.blocks,
+              [current]: {
+                ...incoming,
+              },
+              [idTrailingBlock]: {
+                '@type': settings.defaultBlockType,
+              },
+            },
+            blocks_layout: {
+              ...blocksData.blocks_layout,
+              items: [...newBlocksLayoutItems],
+            },
+          },
+        },
+        () => {
+          // this.updatePropsBlocksData();
+          resolve(current);
+        },
+      );
+    });
   }
 
   onChangeField(current, incoming) {}
