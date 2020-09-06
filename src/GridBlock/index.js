@@ -1,4 +1,4 @@
-import GridBlockEdit from './GridBlockEdit';
-import GridBlockView from './GridBlockView';
+import GridBlockEdit from './Edit';
+import GridBlockView from './View';
 
 export { GridBlockEdit, GridBlockView };
