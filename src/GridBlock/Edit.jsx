@@ -21,17 +21,6 @@ import {
 } from '../helpers';
 import '../less/gridLayout.less';
 
-const getFakeSlate = () => {
-  const id = uuid();
-  return {
-    block: id,
-    data: {
-      '@type': 'slate',
-      plaintext: '',
-    },
-  };
-};
-
 class GridBlockEdit extends React.Component {
   constructor(props) {
     super(props);
@@ -60,14 +49,16 @@ class GridBlockEdit extends React.Component {
   }
 
   getInitialState() {
-    const initialFakeSlate = getFakeSlate();
+    const idTrailingBlock = uuid();
     const blocksData = isEmpty(this.props.data.blocksData?.blocks)
       ? {
           blocks: {
-            [initialFakeSlate.block]: initialFakeSlate.data,
+            [idTrailingBlock]: {
+              '@type': settings.defaultBlockType,
+            },
           },
           blocks_layout: {
-            items: [initialFakeSlate.block],
+            items: [idTrailingBlock],
           },
         }
       : { ...this.props.data.blocksData };
