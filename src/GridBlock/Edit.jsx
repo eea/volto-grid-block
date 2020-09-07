@@ -45,7 +45,9 @@ class GridBlockEdit extends React.Component {
     const initialState = this.getInitialState(props);
     this.gridContainer = React.createRef();
     this.state = initialState;
-    this.updatePropsBlocksData();
+    this.updatePropsBlocksData({
+      ...this.state.initialBlocksData,
+    });
   }
 
   getInitialState() {
@@ -63,7 +65,7 @@ class GridBlockEdit extends React.Component {
         }
       : { ...this.props.data.blocksData };
     return {
-      blocksData: { ...blocksData },
+      initialBlocksData: blocksData,
       selectedBlock: null,
       selectedBlockFullControl: null,
       placeholderProps: null,
@@ -82,11 +84,12 @@ class GridBlockEdit extends React.Component {
 
   componentDidUpdate(prevProps) {}
 
-  updatePropsBlocksData() {
-    this.props.onChangeBlock(this.props.block, {
+  updatePropsBlocksData(newBlocksData) {
+    console.log(newBlocksData);
+    return this.props.onChangeBlock(this.props.block, {
       ...this.props.data,
       blocksData: {
-        ...this.state.blocksData,
+        ...newBlocksData,
       },
     });
   }
@@ -124,25 +127,22 @@ class GridBlockEdit extends React.Component {
     if (!destination) {
       return;
     }
-    return this.setState(
-      {
-        placeholderProps: {},
-        blocksData: {
-          ...this.state.blocksData,
-          blocks_layout: {
-            ...this.state.blocksData.blocks_layout,
-            items: move(
-              this.state.blocksData.blocks_layout.items,
-              source.index,
-              destination.index,
-            ),
-          },
-        },
+
+    this.setState({
+      placeholderProps: {},
+    });
+
+    return this.updatePropsBlocksData({
+      ...this.props.data.blocksData,
+      blocks_layout: {
+        ...this.props.data.blocksData.blocks_layout,
+        items: move(
+          this.props.data.blocksData.blocks_layout.items,
+          source.index,
+          destination.index,
+        ),
       },
-      () => {
-        this.updatePropsBlocksData();
-      },
-    );
+    });
   }
 
   handleDragStart(event) {
@@ -245,7 +245,7 @@ class GridBlockEdit extends React.Component {
     if (e.key === 'Enter' && !disableEnter) {
       this.onAddBlock(
         { '@type': settings.defaultBlockType },
-        this.state.blocksData.blocks_layout.items.indexOf(block),
+        this.props.data.blocksData.blocks_layout.items.indexOf(block),
       );
       e.preventDefault();
     }
@@ -279,7 +279,7 @@ class GridBlockEdit extends React.Component {
 
   onAddBlock(incoming, position = -1) {
     return new Promise((resolve) => {
-      const blocksData = { ...(this.state.blocksData || {}) };
+      const blocksData = { ...(this.props.data.blocksData || {}) };
       const blockId = uuid();
       const newBlocks = {
         ...(blocksData?.blocks || {}),
@@ -298,188 +298,107 @@ class GridBlockEdit extends React.Component {
           blockId,
         ];
       }
-      this.props.onChangeBlock(this.props.block, {
-        ...this.props.data,
-        blocksData: {
-          ...blocksData,
-          blocks: {
-            ...newBlocks,
-          },
-          blocks_layout: {
-            ...newBlocksLayout,
-          },
+
+      this.updatePropsBlocksData({
+        ...blocksData,
+        blocks: {
+          ...newBlocks,
         },
+        blocks_layout: {
+          ...newBlocksLayout,
+        },
+      }).then(() => {
+        resolve(blockId);
       });
-      this.setState(
-        {
-          blocksData: {
-            ...blocksData,
-            blocks: {
-              ...newBlocks,
-            },
-            blocks_layout: {
-              ...newBlocksLayout,
-            },
-          },
-        },
-        () => {
-          // this.updatePropsBlocksData();
-          resolve(blockId);
-        },
-      );
     });
   }
 
   onChangeBlock(current, incoming) {
     return new Promise((resolve) => {
-      const blocksData = { ...(this.state.blocksData || {}) };
+      const blocksData = { ...(this.props.data.blocksData || {}) };
       const newBlocksLayoutItems = [...blocksData.blocks_layout.items];
-      this.props
-        .onChangeBlock(this.props.block, {
-          ...this.props.data,
-          blocksData: {
-            ...blocksData,
-            blocks: {
-              ...blocksData.blocks,
-              [current]: {
-                ...incoming,
-              },
-            },
-            blocks_layout: {
-              ...blocksData.blocks_layout,
-              items: [...newBlocksLayoutItems],
-            },
-          },
-        })
-        .then(() => {
-          console.log('HERE', current);
-        });
-      this.setState(
-        {
-          blocksData: {
-            ...blocksData,
-            blocks: {
-              ...blocksData.blocks,
-              [current]: {
-                ...incoming,
-              },
-            },
-            blocks_layout: {
-              ...blocksData.blocks_layout,
-              items: [...newBlocksLayoutItems],
-            },
+      this.updatePropsBlocksData({
+        ...blocksData,
+        blocks: {
+          ...blocksData.blocks,
+          [current]: {
+            ...incoming,
           },
         },
-        () => {
-          // this.updatePropsBlocksData();
-          resolve(current);
+        blocks_layout: {
+          ...blocksData.blocks_layout,
+          items: [...newBlocksLayoutItems],
         },
-      );
+      }).then(() => {
+        resolve(current);
+      });
     });
   }
 
   onMutateBlock(current, incoming) {
     return new Promise((resolve) => {
       const idTrailingBlock = uuid();
-      const blocksData = { ...(this.state.blocksData || {}) };
+      const blocksData = { ...(this.props.data.blocksData || {}) };
       const newBlocksLayoutItems = [
         ...blocksData.blocks_layout.items,
         idTrailingBlock,
       ];
-      this.props.onChangeBlock(this.props.block, {
-        ...this.props.data,
-        blocksData: {
-          ...blocksData,
-          blocks: {
-            ...blocksData.blocks,
-            [current]: {
-              ...incoming,
-            },
-            [idTrailingBlock]: {
-              '@type': settings.defaultBlockType,
-            },
+      this.updatePropsBlocksData({
+        ...blocksData,
+        blocks: {
+          ...blocksData.blocks,
+          [current]: {
+            ...incoming,
           },
-          blocks_layout: {
-            ...blocksData.blocks_layout,
-            items: [...newBlocksLayoutItems],
+          [idTrailingBlock]: {
+            '@type': settings.defaultBlockType,
           },
         },
+        blocks_layout: {
+          ...blocksData.blocks_layout,
+          items: [...newBlocksLayoutItems],
+        },
+      }).then(() => {
+        resolve(current);
       });
-      this.setState(
-        {
-          blocksData: {
-            ...blocksData,
-            blocks: {
-              ...blocksData.blocks,
-              [current]: {
-                ...incoming,
-              },
-              [idTrailingBlock]: {
-                '@type': settings.defaultBlockType,
-              },
-            },
-            blocks_layout: {
-              ...blocksData.blocks_layout,
-              items: [...newBlocksLayoutItems],
-            },
-          },
-        },
-        () => {
-          // this.updatePropsBlocksData();
-          resolve(current);
-        },
-      );
     });
   }
 
   onChangeField(current, incoming) {}
 
   onDeleteBlock(current) {
-    if (this.state.blocksData.blocks_layout.items.length === 1) {
-      this.setState(
-        {
-          blocksData: { blocks: {}, blocks_layout: { items: [] } },
-        },
-        () => {
-          this.props.onDeleteBlock(this.props.block);
-        },
-      );
+    if (this.props.data.blocksData.blocks_layout.items.length === 1) {
+      return this.props.onDeleteBlock(this.props.block);
     } else {
       const newBlocks = {
-        ...this.state.blocksData.blocks,
+        ...this.props.data.blocksData.blocks,
       };
       const newBlocksLayoutItems = [
-        ...this.state.blocksData.blocks_layout.items,
+        ...this.props.data.blocksData.blocks_layout.items,
       ];
       const position = newBlocksLayoutItems.indexOf(current);
       delete newBlocks[current];
       if (position > -1) {
         newBlocksLayoutItems.splice(position, 1);
       }
-      this.setState(
-        {
-          blocksData: {
-            ...this.state.blocksData,
-            blocks: {
-              ...newBlocks,
-            },
-            blocks_layout: {
-              ...this.state.blocksData.blocks_layout,
-              items: [...newBlocksLayoutItems],
-            },
-          },
+
+      return this.updatePropsBlocksData({
+        ...this.props.data.blocksData,
+        blocks: {
+          ...newBlocks,
         },
-        () => {
-          this.updatePropsBlocksData();
+        blocks_layout: {
+          ...this.props.data.blocksData.blocks_layout,
+          items: [...newBlocksLayoutItems],
         },
-      );
+      });
     }
   }
 
   onMoveBlock(current, incoming) {}
 
   onFocusPreviousBlock(block) {
-    const blocks_layout = this.state.blocksData?.blocks_layout || {};
+    const blocks_layout = this.props.data.blocksData?.blocks_layout || {};
     if (this.state.selectedBlock) {
       const position = blocks_layout.items.indexOf(block);
       this.setState({
@@ -491,7 +410,9 @@ class GridBlockEdit extends React.Component {
   }
 
   onFocusNextBlock(block) {
-    const blocks_layout = this.state.blocksData?.blocks_layout || { items: [] };
+    const blocks_layout = this.props.data.blocksData?.blocks_layout || {
+      items: [],
+    };
     if (this.state.selectedBlock) {
       const position = blocks_layout.items.indexOf(block);
       this.setState({
