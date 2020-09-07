@@ -42,27 +42,33 @@ const GridBlockView = (props) => {
         style={{ ...(getRowStyle(props.data) || {}) }}
       >
         {blocksData.blocks_layout?.items?.length
-          ? blocksData.blocks_layout.items.map((block, blockIndex) => (
-              <div
-                key={`view-${block}`}
-                className={cx(
-                  'column',
-                  getColumnClasses(blocksData.blocks[block] || {}),
-                )}
-                style={{ ...(getColumnStyle(blocksData.blocks[block]) || {}) }}
-              >
+          ? blocksData.blocks_layout.items.map((block, blockIndex) =>
+              blocksData.blocks[block] ? (
                 <div
-                  className="column-block-container"
+                  key={`view-${block}`}
+                  className={cx(
+                    'column',
+                    getColumnClasses(blocksData.blocks[block] || {}),
+                  )}
                   style={{
-                    height: blocksData.blocks[block].grid_column_height
-                      ? `${blocksData.blocks[block].grid_column_height}px`
-                      : '100%',
+                    ...(getColumnStyle(blocksData.blocks[block]) || {}),
                   }}
                 >
-                  <Tile {...props} block={blocksData.blocks[block]} />
+                  <div
+                    className="column-block-container"
+                    style={{
+                      height: blocksData.blocks?.[block].grid_column_height
+                        ? `${blocksData.blocks?.[block].grid_column_height}px`
+                        : '100%',
+                    }}
+                  >
+                    <Tile {...props} block={blocksData.blocks[block]} />
+                  </div>
                 </div>
-              </div>
-            ))
+              ) : (
+                ''
+              ),
+            )
           : ''}
       </div>
     </div>
