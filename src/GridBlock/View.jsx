@@ -1,7 +1,6 @@
 import React from 'react';
 import cx from 'classnames';
 import { blocks } from '~/config';
-import { getColumnLayout } from '../helpers';
 import {
   getColumnStyle,
   getColumnClasses,
@@ -48,7 +47,7 @@ const GridBlockView = (props) => {
                 key={`view-${block}`}
                 className={cx(
                   'column',
-                  getColumnClasses(blocksData.blocks[block]),
+                  getColumnClasses(blocksData.blocks[block] || {}),
                 )}
                 style={{ ...(getColumnStyle(blocksData.blocks[block]) || {}) }}
               >

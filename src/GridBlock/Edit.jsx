@@ -130,9 +130,9 @@ class GridBlockEdit extends React.Component {
         blocksData: {
           ...this.state.blocksData,
           blocks_layout: {
-            ...this.state.blocks_layout,
+            ...this.state.blocksData.blocks_layout,
             items: move(
-              this.state.blocks_layout.items,
+              this.state.blocksData.blocks_layout.items,
               source.index,
               destination.index,
             ),
@@ -298,6 +298,18 @@ class GridBlockEdit extends React.Component {
           blockId,
         ];
       }
+      this.props.onChangeBlock(this.props.block, {
+        ...this.props.data,
+        blocksData: {
+          ...blocksData,
+          blocks: {
+            ...newBlocks,
+          },
+          blocks_layout: {
+            ...newBlocksLayout,
+          },
+        },
+      });
       this.setState(
         {
           blocksData: {
@@ -311,7 +323,7 @@ class GridBlockEdit extends React.Component {
           },
         },
         () => {
-          this.updatePropsBlocksData();
+          // this.updatePropsBlocksData();
           resolve(blockId);
         },
       );
@@ -322,22 +334,26 @@ class GridBlockEdit extends React.Component {
     return new Promise((resolve) => {
       const blocksData = { ...(this.state.blocksData || {}) };
       const newBlocksLayoutItems = [...blocksData.blocks_layout.items];
-      this.props.onChangeBlock(this.props.block, {
-        ...this.props.data,
-        blocksData: {
-          ...blocksData,
-          blocks: {
-            ...blocksData.blocks,
-            [current]: {
-              ...incoming,
+      this.props
+        .onChangeBlock(this.props.block, {
+          ...this.props.data,
+          blocksData: {
+            ...blocksData,
+            blocks: {
+              ...blocksData.blocks,
+              [current]: {
+                ...incoming,
+              },
+            },
+            blocks_layout: {
+              ...blocksData.blocks_layout,
+              items: [...newBlocksLayoutItems],
             },
           },
-          blocks_layout: {
-            ...blocksData.blocks_layout,
-            items: [...newBlocksLayoutItems],
-          },
-        },
-      });
+        })
+        .then(() => {
+          console.log('HERE', current);
+        });
       this.setState(
         {
           blocksData: {
@@ -613,7 +629,7 @@ class GridBlockEdit extends React.Component {
                         this.state.placeholderProps.clientHeight + 18
                       }px`,
                       background: '#eee',
-                      width: `${this.state.laceholderProps.clientWidth}px`,
+                      width: `${this.state.placeholderProps.clientWidth}px`,
                       borderRadius: '3px',
                     }}
                   />

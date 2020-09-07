@@ -6,7 +6,7 @@ const makeSuperClass = (className, isSuper) => {
   return className;
 };
 
-export const getColumnLayout = (gridLayout) => {
+export const getColumnLayout = (gridLayout = {}) => {
   const deafult = gridLayout.default || 12;
   const xs = gridLayout.xs || null;
   const sm = gridLayout.sm || null;
@@ -22,7 +22,7 @@ export const getColumnLayout = (gridLayout) => {
   );
 };
 
-export const getColumnClasses = (block) => {
+export const getColumnClasses = (block = {}) => {
   const columnSuper = block.grid_column_super;
   const columnLayout = getColumnLayout({
     default: block.grid_column_default,
@@ -39,7 +39,7 @@ export const getColumnClasses = (block) => {
   return cx(columnLayout, columnClassName, columnTextAlignment);
 };
 
-export const getColumnStyle = (block) => {
+export const getColumnStyle = (block = {}) => {
   const columnInlineStyle = isObject(block.grid_column_inline_style)
     ? block.grid_column_inline_style
     : {};
@@ -60,7 +60,7 @@ export const getColumnStyle = (block) => {
   };
 };
 
-export const getGridStyle = (data) => {
+export const getGridStyle = (data = {}) => {
   const gridInlineStyle = isObject(data.grid_inline_style)
     ? data.grid_inline_style
     : {};
@@ -75,7 +75,7 @@ export const getGridStyle = (data) => {
   };
 };
 
-export const getRowClasses = (data) => {
+export const getRowClasses = (data = {}) => {
   const rowSuper = data.grid_row_super;
   const rowUiContainer = data.grid_row_fluid ? 'ui container' : '';
   const rowClassName = data.grid_row_class_name;
@@ -100,7 +100,7 @@ export const getRowClasses = (data) => {
   );
 };
 
-export const getRowStyle = (data) => {
+export const getRowStyle = (data = {}) => {
   const rowInlineStyle = isObject(data.grid_row_inline_style)
     ? data.grid_row_inline_style
     : {};
