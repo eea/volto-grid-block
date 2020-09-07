@@ -49,6 +49,9 @@ const GridBlockView = (props) => {
                   className={cx(
                     'column',
                     getColumnClasses(blocksData.blocks[block] || {}),
+                    blocksData.blocks[block].grid_column_text_color_active
+                      ? 'overwrite-color'
+                      : '',
                   )}
                   style={{
                     ...(getColumnStyle(blocksData.blocks[block]) || {}),

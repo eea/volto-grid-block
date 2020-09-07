@@ -102,6 +102,7 @@
 @display: block, flex, grid, inline-block, initial, inherit, none;
 @display-position: relative, absolute, static, none;
 @align-items: stretch, center, flex-start, flex-end, baseline, initial, inherit;
+@flex-flow: row, column;
 @justify-content: flex-start, flex-end, center, space-between, space-around, initial, inherit;
 @text-align: left, right, center, justify, initial, inherit;
 @range: 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12;
@@ -157,6 +158,8 @@
 .makeClassByArray(@display-position, position, position, true);
 .makeClassByArray(@align-items, align-items, align-items, false);
 .makeClassByArray(@align-items, align-items, align-items, true);
+.makeClassByArray(@flex-flow, flex-flow, flex-flow, false);
+.makeClassByArray(@flex-flow, flex-flow, flex-flow, true);
 .makeClassByArray(@justify-content, justify-content, justify-content, false);
 .makeClassByArray(@justify-content, justify-content, justify-content, true);
 .makeClassByArray(@text-align, text-align, text-align, false);
@@ -406,12 +409,28 @@
     width: 100%;
   }
 
-  h1, h2, h3, h4, h5, p {
-    color: inherit !important;
+  .overwrite-color {
+    h1, h2, h3, h4, h5, p {
+      color: inherit !important;
+    }
   }
 }
-
 .color-picker-widget {
+  .color-picker-toolbar {
+    display: flex;
+    flex-flow: row;
+    justify-content: space-between;
+    background: #808080;
+    color: #fff;
+    border-radius: 4px;
+    padding: 6px;
+    .ui.toggle.checkbox .box, .ui.toggle.checkbox label,
+    .ui.toggle.checkbox input:checked ~ .box,
+    .ui.toggle.checkbox input:checked ~ label {
+      color: #fff !important;
+    }
+  }
+
   .ui.toggle.checkbox .box:after,
   .ui.toggle.checkbox label:after {
     z-index: 1;

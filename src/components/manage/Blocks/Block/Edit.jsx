@@ -164,6 +164,11 @@ class Edit extends Component {
                   : '100%',
                 ...(getColumnStyle(this.props.data) || {}),
               }}
+              className={cx(
+                this.props.data.grid_column_text_color_active
+                  ? 'overwrite-color'
+                  : '',
+              )}
             >
               <Block {...this.props} blockNode={this.blockNode} />
             </div>

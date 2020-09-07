@@ -5,6 +5,7 @@ import { CompactPicker } from 'react-color';
 import { Checkbox } from 'semantic-ui-react';
 
 const ColorPickerWidget = (props) => {
+  const [active, setActive] = useState(false);
   const [transparent, setTransparent] = useState(false);
 
   const handleChangeComplete = (color) => {
@@ -16,27 +17,47 @@ const ColorPickerWidget = (props) => {
 
   return (
     <div className="color-picker-widget">
-      <div className="color-picker-label display-flex justify-content-space-between">
-        <span>{props.title}</span>{' '}
-        <Checkbox
-          label="Transparent"
-          toggle
-          onChange={(event, data) => {
-            if (props.value && data.checked) {
-              props.onChange(props.id, 'transparent');
-            } else if (props.value === 'transparent') {
-              props.onChange(props.id, '#000000');
-            }
-            setTransparent(data.checked);
-          }}
-          checked={transparent}
-        />
+      <div className="display-flex flex-flow-column">
+        <div className="color-picker-toolbar">
+          <span>{props.title}</span>
+          <Checkbox
+            label={active ? 'ON' : 'OFF'}
+            toggle
+            onChange={(event, data) => {
+              props.onChange(`${props.id}_active`, data.checked);
+              setActive(data.checked);
+            }}
+            checked={active}
+          />
+        </div>{' '}
+        {active ? (
+          <Checkbox
+            className="pt-1 pb-1"
+            label="Transparent"
+            toggle
+            onChange={(event, data) => {
+              if (props.value && data.checked) {
+                props.onChange(props.id, 'transparent');
+              } else if (props.value === 'transparent') {
+                props.onChange(props.id, '#000000');
+              }
+              setTransparent(data.checked);
+            }}
+            checked={transparent}
+          />
+        ) : (
+          ''
+        )}
       </div>
-      <CompactPicker
-        className="color-picker"
-        color={props.value || '#000'}
-        onChangeComplete={handleChangeComplete}
-      />
+      {active ? (
+        <CompactPicker
+          className="color-picker"
+          color={props.value || '#000'}
+          onChangeComplete={handleChangeComplete}
+        />
+      ) : (
+        ''
+      )}
     </div>
   );
 };
