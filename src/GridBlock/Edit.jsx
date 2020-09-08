@@ -85,7 +85,6 @@ class GridBlockEdit extends React.Component {
   componentDidUpdate(prevProps) {}
 
   updatePropsBlocksData(newBlocksData) {
-    console.log(newBlocksData);
     return this.props.onChangeBlock(this.props.block, {
       ...this.props.data,
       blocksData: {
@@ -97,8 +96,10 @@ class GridBlockEdit extends React.Component {
   handleClickOutside(event) {
     const sidebars = document.querySelectorAll('.sidebar-container');
     const slateToolbars = document.querySelectorAll('.slate-toolbar');
+    const modals = document.querySelectorAll('.ui.modal');
     let inSidebar = false;
     let inSlateToolbar = false;
+    let inModal = false;
     for (let sidebar of sidebars) {
       if (sidebar.contains(event.target) && !inSidebar) {
         inSidebar = true;
@@ -111,12 +112,19 @@ class GridBlockEdit extends React.Component {
         break;
       }
     }
+    for (let modal of modals) {
+      if (modal.contains(event.target) && !inModal) {
+        inModal = true;
+        break;
+      }
+    }
     if (
       this.gridContainer &&
       this.gridContainer.current &&
       !this.gridContainer.current.contains(event.target) &&
       !inSidebar &&
-      !inSlateToolbar
+      !inSlateToolbar &&
+      !inModal
     ) {
       this.setState({ selectedBlock: null, selectedBlockFullControl: null });
     }

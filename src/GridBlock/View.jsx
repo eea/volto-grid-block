@@ -12,15 +12,15 @@ import {
 import '../less/gridLayout.less';
 
 const Tile = React.memo((props) => {
-  const { block } = props;
+  const { block, id } = props;
   let Block = null;
   let type = block['@type'];
   Block = blocks.blocksConfig?.[type]?.view;
 
   return Block ? (
     <Block
-      key={block.id}
-      id={block.id}
+      key={id}
+      id={id}
       properties={props.properties}
       data={block}
       path={props.path}
@@ -65,7 +65,11 @@ const GridBlockView = (props) => {
                         : '100%',
                     }}
                   >
-                    <Tile {...props} block={blocksData.blocks[block]} />
+                    <Tile
+                      {...props}
+                      block={blocksData.blocks[block]}
+                      id={block}
+                    />
                   </div>
                 </div>
               ) : (
