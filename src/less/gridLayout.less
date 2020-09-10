@@ -105,6 +105,7 @@
 @flex-flow: row, column;
 @justify-content: flex-start, flex-end, center, space-between, space-around, initial, inherit;
 @text-align: left, right, center, justify, initial, inherit;
+@text-decoration: underline, overline, line-through;
 @range: 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12;
 @position: {
   top: t;
@@ -164,6 +165,8 @@
 .makeClassByArray(@justify-content, justify-content, justify-content, true);
 .makeClassByArray(@text-align, text-align, text-align, false);
 .makeClassByArray(@text-align, text-align, text-align, true);
+.makeClassByArray(@text-decoration, text-decoration, text-decoration, false);
+.makeClassByArray(@text-decoration, text-decoration, text-decoration, true);
 
 .viewport-columns(@class, @super) {
   each(@range, {
