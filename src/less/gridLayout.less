@@ -190,28 +190,28 @@
 .viewport-columns(column, false);
 .viewport-columns(column, true);
 
-@media (min-width: @smallest) {
+@media (max-width: @smallest) {
   .viewport-columns(xs, false);
   .viewport-columns(xs, true);
   .makeClassByObject(@position, @range, margin, xs-m, true);
   .makeClassByObject(@position, @range, padding, xs-p, true);
 }
 
-@media (min-width: @small) {
+@media (min-width: @smallest) and (max-width: @small) {
   .viewport-columns(sm, false);
   .viewport-columns(sm, true);
   .makeClassByObject(@position, @range, margin, sm-m, true);
   .makeClassByObject(@position, @range, padding, sm-p, true);
 }
 
-@media (min-width: @medium) {
+@media (min-width: @small) and (max-width: @medium) {
   .viewport-columns(md, false);
   .viewport-columns(md, true);
   .makeClassByObject(@position, @range, margin, md-m, true);
   .makeClassByObject(@position, @range, padding, md-p, true);
 }
 
-@media (min-width: @large) {
+@media (min-width: @medium) {
   .viewport-columns(lg, false);
   .viewport-columns(lg, true);
   .makeClassByObject(@position, @range, margin, lg-m, true);

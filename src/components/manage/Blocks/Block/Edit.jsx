@@ -23,7 +23,7 @@ import {
   BlockSettingsSidebar,
   BlockSettingsSchema,
 } from '@plone/volto/components';
-import { getColumnStyle } from '../../../../helpers';
+import { getColumnStyle, getColumnClasses } from '../../../../helpers';
 
 const messages = defineMessages({
   unknownBlock: {
