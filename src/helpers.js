@@ -43,8 +43,12 @@ export const getColumnStyle = (block = {}) => {
   const columnInlineStyle = isObject(block.grid_column_inline_style)
     ? block.grid_column_inline_style
     : {};
-  const columnTextColor = block.grid_column_text_color || 'inherit';
-  const columnBackgroundColor = block.grid_column_background_color || 'inherit';
+  const columnTextColor = block.grid_column_text_color_active
+    ? block.grid_column_text_color || 'inherit'
+    : 'inherit';
+  const columnBackgroundColor = block.grid_column_background_color_active
+    ? block.grid_column_background_color || 'inherit'
+    : 'inherit';
   const columnMargin = block.grid_column_margin
     ? block.grid_column_margin
     : 'unset';
@@ -64,7 +68,9 @@ export const getGridStyle = (data = {}) => {
   const gridInlineStyle = isObject(data.grid_inline_style)
     ? data.grid_inline_style
     : {};
-  const gridBackgroundColor = data.grid_background_color || 'inherit';
+  const gridBackgroundColor = data.grid_background_color_active
+    ? data.grid_background_color || 'inherit'
+    : 'inherit';
   const gridMargin = data.grid_margin ? data.grid_margin : 'unset';
   const gridPadding = data.grid_padding ? data.grid_padding : 'unset';
   return {
@@ -104,7 +110,9 @@ export const getRowStyle = (data = {}) => {
   const rowInlineStyle = isObject(data.grid_row_inline_style)
     ? data.grid_row_inline_style
     : {};
-  const rowBackgroundColor = data.grid_row_background_color || 'inherit';
+  const rowBackgroundColor = data.grid_row_background_color_active
+    ? data.grid_row_background_color || 'inherit'
+    : 'inherit';
   const rowMargin = data.grid_row_margin ? data.grid_row_margin : 'unset';
   const rowPadding = data.grid_row_padding ? data.grid_row_padding : 'unset';
   return {
