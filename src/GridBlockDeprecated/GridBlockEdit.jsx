@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { BlockChooser } from '@plone/volto/components';
-import { withFormStateContext } from '@plone/volto/components/manage/Form/FormContext';
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 import { Button } from 'semantic-ui-react';
 import { v4 as uuid } from 'uuid';
@@ -483,4 +482,4 @@ const GridBlockEdit = (props) => {
     </div>
   );
 };
-export default withFormStateContext(GridBlockEdit);
+export default GridBlockEdit;

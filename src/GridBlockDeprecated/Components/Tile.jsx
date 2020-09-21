@@ -1,7 +1,5 @@
 import React from 'react';
 import cx from 'classnames';
-import { withFormStateContext } from '@plone/volto/components/manage/Form/FormContext';
-
 import { blocks } from '~/config';
 
 import TileControl from './TileControl';
@@ -89,4 +87,4 @@ const Tile = React.memo((props) => {
   );
 });
 
-export default withFormStateContext(Tile);
+export default Tile;

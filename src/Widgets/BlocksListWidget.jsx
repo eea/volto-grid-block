@@ -136,7 +136,7 @@ const BlocksListWidget = (props) => {
         <BlockChooser
           onMutateBlock={onAddBlock}
           currentBlock={
-            blocks_layout?.items?.[blocks_layout?.items?.length - 1]
+            blocks_layout?.items?.[blocks_layout?.items?.length - 1] || null
           }
         />
       </div>

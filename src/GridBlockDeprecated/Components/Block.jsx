@@ -1,6 +1,5 @@
 import React from 'react';
 import cx from 'classnames';
-import { withFormStateContext } from '@plone/volto/components/manage/Form/FormContext';
 
 import { blocks } from '~/config';
 
@@ -67,4 +66,4 @@ const Block = ({
   );
 };
 
-export default withFormStateContext(Block);
+export default Block;
