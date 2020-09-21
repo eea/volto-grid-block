@@ -259,7 +259,10 @@ class GridBlockEdit extends React.Component {
         { '@type': settings.defaultBlockType },
         this.props.data.blocksData.blocks_layout.items.indexOf(block),
       );
-      // e.preventDefault();
+      e.preventDefault();
+    }
+    if (e.key === 'Control') {
+      this.props.onAddBlock(settings.defaultBlockType, this.props.index + 1);
     }
   }
 
