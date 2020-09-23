@@ -143,6 +143,7 @@ export const makeSchema = (props) => {
         title: 'Grid advanced settings',
         fields: [
           'grid_fluid',
+          'grid_overwrite_layout',
           'grid_class_name',
           'grid_background_color',
           'grid_margin',
@@ -175,6 +176,10 @@ export const makeSchema = (props) => {
       },
       grid_fluid: {
         title: 'Fluid',
+        type: 'boolean',
+      },
+      grid_overwrite_layout: {
+        title: 'Overwrite layout',
         type: 'boolean',
       },
       grid_class_name: {

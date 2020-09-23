@@ -16,7 +16,6 @@ const Tile = React.memo((props) => {
   let Block = null;
   let type = block['@type'];
   Block = blocks.blocksConfig?.[type]?.view;
-
   return Block ? (
     <Block
       key={id}
