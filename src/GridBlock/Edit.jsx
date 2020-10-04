@@ -6,7 +6,7 @@ import { DragDropContext, Draggable, Droppable } from 'react-beautiful-dnd';
 import { makeSchema, getBlockFullControlSchema } from './schema';
 import cx from 'classnames';
 import move from 'lodash-move';
-import { isEmpty, map } from 'lodash';
+import { isEmpty, isEqual, map } from 'lodash';
 import { v4 as uuid } from 'uuid';
 import dragSVG from '@plone/volto/icons/drag.svg';
 import neutralSVG from '@plone/volto/icons/neutral.svg';
@@ -85,7 +85,42 @@ class GridBlockEdit extends React.Component {
     document.removeEventListener('mousedown', this.handleClickOutside, false);
   }
 
-  componentDidUpdate(prevProps) {}
+  componentDidUpdate(prevProps) {
+    const data = this.props.data;
+    const layoutOverwrite = data['grid_overwrite_layout'];
+    const layoutBlocks =
+      this.props.properties?.['@components']?.layout?.blocks || {};
+    const layoutBlockId = data['@layout'];
+    const layoutBlockData = {
+      '@layout': layoutBlockId,
+      ...(layoutBlocks[layoutBlockId] || {}),
+      grid_overwrite_layout: layoutOverwrite,
+    };
+    if (
+      prevProps.data['grid_overwrite_layout'] !==
+        data['grid_overwrite_layout'] &&
+      !layoutOverwrite &&
+      layoutBlockData &&
+      !isEqual(layoutBlockData, data)
+    ) {
+      this.props.onChangeBlock(this.props.block, {
+        '@layout': layoutBlockId,
+        ...(layoutBlockData || {}),
+        grid_overwrite_layout: false,
+      });
+    } else if (
+      prevProps.data['grid_overwrite_layout'] ===
+        data['grid_overwrite_layout'] &&
+      !layoutOverwrite &&
+      layoutBlockData &&
+      !isEqual(layoutBlockData, data)
+    ) {
+      this.props.onChangeBlock(this.props.block, {
+        ...this.props.data,
+        grid_overwrite_layout: true,
+      });
+    }
+  }
 
   updatePropsBlocksData(newBlocksData) {
     return this.props.onChangeBlock(this.props.block, {
