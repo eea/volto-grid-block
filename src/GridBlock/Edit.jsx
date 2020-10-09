@@ -97,6 +97,7 @@ class GridBlockEdit extends React.Component {
       grid_overwrite_layout: layoutOverwrite,
     };
     if (
+      this.props.properties['@type'] &&
       prevProps.data['grid_overwrite_layout'] !==
         data['grid_overwrite_layout'] &&
       !layoutOverwrite &&
@@ -109,6 +110,7 @@ class GridBlockEdit extends React.Component {
         grid_overwrite_layout: false,
       });
     } else if (
+      this.props.properties['@type'] &&
       prevProps.data['grid_overwrite_layout'] ===
         data['grid_overwrite_layout'] &&
       !layoutOverwrite &&
