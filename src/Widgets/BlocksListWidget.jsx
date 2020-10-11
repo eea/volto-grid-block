@@ -11,6 +11,8 @@ import { DragDropContext, Droppable } from 'react-beautiful-dnd';
 import Icon from '@plone/volto/components/theme/Icon/Icon';
 import addSVG from '@plone/volto/icons/circle-plus.svg';
 import substractSVG from '@plone/volto/icons/circle-minus.svg';
+import copySVG from '@plone/volto/icons/copy.svg';
+import pasteSVG from '@plone/volto/icons/paste.svg';
 
 import BlockControl from './BlockControl';
 
@@ -124,6 +126,22 @@ const BlocksListWidget = (props) => {
           color="#4296B3"
           onClick={() => {
             setBlockChooser(!blockChooser);
+          }}
+        />
+        <Icon
+          name={copySVG}
+          size="20"
+          color="#4296B3"
+          onClick={() => {
+            props.onChange('copy', {});
+          }}
+        />
+        <Icon
+          name={pasteSVG}
+          size="20"
+          color="#4296B3"
+          onClick={() => {
+            props.onChange('paste', {});
           }}
         />
       </div>

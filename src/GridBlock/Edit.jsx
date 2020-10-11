@@ -20,6 +20,7 @@ import {
   getRowStyle,
 } from '../helpers';
 import '../less/gridLayout.less';
+import { GRIDBLOCK } from '../constants';
 
 class GridBlockEdit extends React.Component {
   constructor(props) {
@@ -42,6 +43,8 @@ class GridBlockEdit extends React.Component {
     this.onMoveBlock = this.onMoveBlock.bind(this);
     this.onFocusPreviousBlock = this.onFocusPreviousBlock.bind(this);
     this.onFocusNextBlock = this.onFocusNextBlock.bind(this);
+    this.copyData = this.copyData.bind(this);
+    this.pasteData = this.pasteData.bind(this);
 
     const initialState = this.getInitialState(props);
     this.gridContainer = React.createRef();
@@ -323,9 +326,15 @@ class GridBlockEdit extends React.Component {
         selectedBlockFullControl: null,
       });
     } else {
-      this.setState({
-        selectedBlockFullControl: id,
-      });
+      this.setState(
+        {
+          selectedBlockFullControl: null,
+        },
+        () =>
+          this.setState({
+            selectedBlockFullControl: id,
+          }),
+      );
     }
   };
 
@@ -486,6 +495,23 @@ class GridBlockEdit extends React.Component {
     }
   }
 
+  copyData() {
+    navigator.clipboard.writeText(JSON.stringify(this.props.data));
+  }
+
+  pasteData() {
+    navigator.clipboard.readText().then((text) => {
+      try {
+        const newData = JSON.parse(text);
+        if (newData['@type'] === GRIDBLOCK) {
+          this.props.onChangeBlock(this.props.block, {
+            ...newData,
+          });
+        }
+      } catch {}
+    });
+  }
+
   render() {
     const blocks = this.props.data.blocksData?.blocks || {};
     const blocks_layout = this.props.data.blocksData?.blocks_layout || {
@@ -642,6 +668,10 @@ class GridBlockEdit extends React.Component {
               onChangeField={(field, data) => {
                 if (field === 'blocksData') {
                   this.updatePropsBlocksData(data);
+                } else if (field === 'copy') {
+                  this.copyData();
+                } else if (field === 'paste') {
+                  this.pasteData();
                 } else {
                   this.props.onChangeBlock(this.props.block, {
                     ...(this.props.data || {}),
