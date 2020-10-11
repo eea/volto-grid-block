@@ -126,6 +126,11 @@ class GridBlockEdit extends React.Component {
         ...this.props.data,
         grid_overwrite_layout: true,
       });
+    } else if (layoutBlockId && typeof layoutOverwrite === 'undefined') {
+      this.props.onChangeBlock(this.props.block, {
+        ...this.props.data,
+        grid_overwrite_layout: false,
+      });
     }
   }
 
