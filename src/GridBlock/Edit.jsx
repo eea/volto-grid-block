@@ -95,40 +95,23 @@ class GridBlockEdit extends React.Component {
       this.props.properties?.['@components']?.layout?.blocks || {};
     const layoutBlockId = data['@layout'];
     const layoutBlockData = {
-      '@layout': layoutBlockId,
       ...(layoutBlocks[layoutBlockId] || {}),
+      '@layout': layoutBlockId,
       grid_overwrite_layout: layoutOverwrite,
     };
+
     if (
       layoutBlockId &&
       typeof layoutOverwrite !== 'undefined' &&
       this.props.properties['@type'] &&
-      prevProps.data['grid_overwrite_layout'] !==
-        data['grid_overwrite_layout'] &&
-      !layoutOverwrite &&
-      layoutBlockData &&
-      !isEqual(layoutBlockData, data)
+      !isEqual(layoutBlockData, data) &&
+      !layoutOverwrite
     ) {
       this.props.onChangeBlock(this.props.block, {
         '@layout': layoutBlockId,
         ...(layoutBlockData || {}),
-        grid_overwrite_layout: false,
       });
-    } else if (
-      layoutBlockId &&
-      typeof layoutOverwrite !== 'undefined' &&
-      this.props.properties['@type'] &&
-      prevProps.data['grid_overwrite_layout'] ===
-        data['grid_overwrite_layout'] &&
-      !layoutOverwrite &&
-      layoutBlockData &&
-      !isEqual(layoutBlockData, data)
-    ) {
-      this.props.onChangeBlock(this.props.block, {
-        ...this.props.data,
-        grid_overwrite_layout: true,
-      });
-    } else if (layoutBlockId && typeof layoutOverwrite === 'undefined') {
+    } else if (typeof layoutOverwrite === 'undefined') {
       this.props.onChangeBlock(this.props.block, {
         ...this.props.data,
         grid_overwrite_layout: false,
