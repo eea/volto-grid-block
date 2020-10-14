@@ -102,16 +102,21 @@ class GridBlockEdit extends React.Component {
 
     if (
       layoutBlockId &&
+      layoutBlocks[layoutBlockId] &&
       typeof layoutOverwrite !== 'undefined' &&
+      !layoutOverwrite &&
       this.props.properties['@type'] &&
-      !isEqual(layoutBlockData, data) &&
-      !layoutOverwrite
+      !isEqual(layoutBlockData, data)
     ) {
+      console.log(layoutBlockData, data);
       this.props.onChangeBlock(this.props.block, {
-        '@layout': layoutBlockId,
         ...(layoutBlockData || {}),
       });
-    } else if (typeof layoutOverwrite === 'undefined') {
+    } else if (
+      layoutBlockId &&
+      layoutBlocks[layoutBlockId] &&
+      typeof layoutOverwrite === 'undefined'
+    ) {
       this.props.onChangeBlock(this.props.block, {
         ...this.props.data,
         grid_overwrite_layout: false,
