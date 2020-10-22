@@ -4,7 +4,7 @@ import { compose } from 'redux';
 import { Checkbox } from 'semantic-ui-react';
 
 import loadable from '@loadable/component';
-const ReactColor = loadable.lib(() => import('react-color'));
+const CompactPicker = loadable(() => import('react-color/lib/Compact'));
 
 const ColorPickerWidget = (props) => {
   const [active, setActive] = useState(false);
@@ -52,17 +52,11 @@ const ColorPickerWidget = (props) => {
         )}
       </div>
       {active ? (
-        <ReactColor>
-          {({ CompactPicker }) => {
-            return (
-              <CompactPicker
-                className="color-picker"
-                color={props.value || '#000'}
-                onChangeComplete={handleChangeComplete}
-              />
-            );
-          }}
-        </ReactColor>
+        <CompactPicker
+          className="color-picker"
+          color={props.value || '#000'}
+          onChangeComplete={handleChangeComplete}
+        />
       ) : (
         ''
       )}
