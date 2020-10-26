@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
 import { connect } from 'react-redux';
 import { compose } from 'redux';
-import { CompactPicker } from 'react-color';
 import { Checkbox } from 'semantic-ui-react';
+
+import loadable from '@loadable/component';
+const CompactPicker = loadable(() => import('react-color/lib/Compact'));
 
 const ColorPickerWidget = (props) => {
   const [active, setActive] = useState(false);
