@@ -108,7 +108,6 @@ class GridBlockEdit extends React.Component {
       this.props.properties['@type'] &&
       !isEqual(layoutBlockData, data)
     ) {
-      console.log(layoutBlockData, data);
       this.props.onChangeBlock(this.props.block, {
         ...(layoutBlockData || {}),
       });

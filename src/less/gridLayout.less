@@ -324,16 +324,17 @@
   width: 100% !important;
   padding: 0rem;
 
-  // .block {
-  //   margin-bottom: 0;
-  //   height: 100%;
-  //   .block:not(.inner)::before {
-  //     z-index: 0;
-  //   }
-  //   &.selected {
-  //     margin-bottom: 0;
-  //   }
-  // }
+  .block .block:not(.inner)::before {
+    pointer-events: none;
+    z-index: 0;
+  }
+  .block {
+    margin-bottom: 0;
+    height: 100%;
+    &.selected {
+      margin-bottom: 0;
+    }
+  }
 
   .row {
     display: flex;

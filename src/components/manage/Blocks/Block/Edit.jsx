@@ -151,7 +151,10 @@ class Edit extends Component {
                 : null
             }
             className={cx(`block ${type}`, { selected: this.props.selected })}
-            style={{ outline: 'none' }}
+            style={{
+              outline: 'none',
+              padding: '2px 4px',
+            }}
             ref={this.blockNode}
             // The tabIndex is required for the keyboard navigation
             /* eslint-disable jsx-a11y/no-noninteractive-tabindex */
