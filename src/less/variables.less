@@ -1,0 +1,96 @@
+@type: extra;
+@element: custom;
+/*******************************
+            Custom
+*******************************/
+/* Breakpoints */
+@wideScreenMinWidth: 1920px;
+@largeScreenMaxWidth: @wideScreenMinWidth - 1;
+@largeScreenMinWidth: 1200px;
+@computerScreenMinWidth: 992px;
+@tabletScreenMaxWidth: @computerScreenMinWidth - 1;
+@tabletScreenMinWidth: 768px;
+@mobileScreenMaxWidth: @tabletScreenMinWidth - 1;
+/* Classes */
+@display: block, flex, grid, inline-block, initial, inherit, none;
+@display-position: relative, absolute, static, none;
+@align-items: stretch, center, flex-start, flex-end, baseline, initial, inherit;
+@flex-flow: row, column;
+@justify-content: flex-start, flex-end, center, space-between, space-around,
+  initial, inherit;
+@text-align: left, right, center, justify, initial, inherit;
+@text-decoration: underline, overline, line-through;
+@range: 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12;
+@position: {
+  top: t;
+  right: r;
+  bottom: b;
+  left: l;
+  default: a;
+};
+
+/*******************************
+            Container
+*******************************/
+
+/*-------------------
+       Element
+--------------------*/
+
+/* Minimum Gutter is used to determine  the maximum container width for a given device */
+
+@maxWidth: 100%;
+
+/* Devices */
+@mobileMinimumGutter: 0em;
+@mobileWidth: 100%;
+@mobileGutter: 1em;
+
+@tabletMinimumGutter: (@emSize * 1);
+@tabletWidth: @tabletBreakpoint - (@tabletMinimumGutter * 2) - @scrollbarWidth;
+@tabletGutter: auto;
+
+@computerMinimumGutter: (@emSize * 1.5);
+@computerWidth: @computerBreakpoint - (@computerMinimumGutter * 2) -
+  @scrollbarWidth;
+@computerGutter: auto;
+
+@largeMonitorMinimumGutter: (@emSize * 2);
+@largeMonitorWidth: @largeMonitorBreakpoint - (@largeMonitorMinimumGutter * 2) -
+  @scrollbarWidth;
+@largeMonitorGutter: auto;
+
+/* Coupling (Add Negative Margin to container size) */
+@gridGutterWidth: 2rem;
+@relaxedGridGutterWidth: 3rem;
+@veryRelaxedGridGutterWidth: 5rem;
+
+@mobileGridWidth: @mobileWidth;
+@tabletGridWidth: ~'calc(' @tabletWidth~ ' + ' @gridGutterWidth~ ')';
+@computerGridWidth: ~'calc(' @computerWidth~ ' + ' @gridGutterWidth~ ')';
+@largeMonitorGridWidth: ~'calc(' @largeMonitorWidth~ ' + ' @gridGutterWidth~ ')';
+
+@mobileRelaxedGridWidth: @mobileWidth;
+@tabletRelaxedGridWidth: ~'calc(' @tabletWidth~ ' + ' @relaxedGridGutterWidth~ ')';
+@computerRelaxedGridWidth: ~'calc(' @computerWidth~ ' + ' @relaxedGridGutterWidth~
+  ')';
+@largeMonitorRelaxedGridWidth: ~'calc(' @largeMonitorWidth~ ' + ' @relaxedGridGutterWidth~
+  ')';
+
+@mobileVeryRelaxedGridWidth: @mobileWidth;
+@tabletVeryRelaxedGridWidth: ~'calc(' @tabletWidth~ ' + ' @veryRelaxedGridGutterWidth~
+  ')';
+@computerVeryRelaxedGridWidth: ~'calc(' @computerWidth~ ' + ' @veryRelaxedGridGutterWidth~
+  ')';
+@largeMonitorVeryRelaxedGridWidth: ~'calc(' @largeMonitorWidth~ ' + ' @veryRelaxedGridGutterWidth~
+  ')';
+
+/*-------------------
+       Types
+--------------------*/
+
+/* Text */
+@textWidth: 700px;
+@textFontFamily: @pageFont;
+@textLineHeight: 1.5;
+@textSize: @large;

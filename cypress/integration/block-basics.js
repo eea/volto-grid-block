@@ -29,6 +29,6 @@ describe('Blocks Tests', () => {
 
     // then the page view should contain our changes
     cy.contains('My Add-on Page');
-    cy.get('.grid-layout');
+    cy.get('.grid-block-container');
   });
 });
