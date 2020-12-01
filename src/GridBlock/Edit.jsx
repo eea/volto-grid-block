@@ -196,7 +196,10 @@ class Edit extends React.Component {
     return (
       <div
         role="presentation"
-        className="grid-block-container edit"
+        className={cx(
+          'grid-block-container',
+          this.state.preview ? 'view' : 'edit',
+        )}
         ref={this.gridBlockContainer}
       >
         {!Object.keys(data.data || {}).length ? (
@@ -401,7 +404,7 @@ class Edit extends React.Component {
                     }}
                   >
                     <Icon
-                      name={this.state.preview ? hideSVG : showSVG}
+                      name={this.state.preview ? showSVG : hideSVG}
                       size="22px"
                     />
                   </Button>
