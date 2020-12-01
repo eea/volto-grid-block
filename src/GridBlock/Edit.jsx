@@ -18,6 +18,7 @@ import { Grid, Segment, Button } from 'semantic-ui-react';
 import { blocks, settings } from '~/config';
 import ColumnVariations from './ColumnVariations';
 import EditBlockWrapper from './EditBlockWrapper';
+import View from './View';
 import { GridBlockSchema, ColumnSchema, BlockSchema } from './schema';
 
 import tuneSVG from '@plone/volto/icons/tune.svg';
@@ -25,6 +26,8 @@ import upSVG from '@plone/volto/icons/up.svg';
 import copySVG from '@plone/volto/icons/copy.svg';
 import pasteSVG from '@plone/volto/icons/paste.svg';
 import enterSVG from '@plone/volto/icons/enter.svg';
+import showSVG from '@plone/volto/icons/show.svg';
+import hideSVG from '@plone/volto/icons/hide.svg';
 
 import '@eeacms/volto-grid-block/less/grid-block.less';
 
@@ -40,6 +43,7 @@ class Edit extends React.Component {
       activeColumn: null,
       activeBlock: null,
       colSelections: {},
+      preview: false,
     };
     this.gridBlockContainer = React.createRef();
   }
@@ -206,6 +210,8 @@ class Edit extends React.Component {
               });
             }}
           />
+        ) : this.state.preview ? (
+          <View {...this.props} />
         ) : (
           <Grid
             columns={grid_size}
@@ -324,7 +330,7 @@ class Edit extends React.Component {
                                 this.props.setSidebarTab(1);
                               }}
                             >
-                              <Icon name={tuneSVG} className="" size="19px" />
+                              <Icon name={tuneSVG} size="19px" />
                             </Button>
                           </>
                         }
@@ -353,13 +359,14 @@ class Edit extends React.Component {
                     basic
                     title="Add new block below the grid"
                     onClick={() => {
+                      this.setState({ preview: !this.state.preview });
                       onAddBlock(
                         settings.defaultBlockType,
                         this.props.index + 1,
                       );
                     }}
                   >
-                    <Icon name={enterSVG} className="" size="22px" />
+                    <Icon name={enterSVG} size="22px" />
                   </Button>
                   <Button
                     icon
@@ -367,7 +374,7 @@ class Edit extends React.Component {
                     title="Copy grid block data"
                     onClick={this.copyData}
                   >
-                    <Icon name={copySVG} className="" size="22px" />
+                    <Icon name={copySVG} size="22px" />
                   </Button>
                   <Button
                     icon
@@ -375,7 +382,20 @@ class Edit extends React.Component {
                     title="Paste grid block data"
                     onClick={this.pasteData}
                   >
-                    <Icon name={pasteSVG} className="" size="22px" />
+                    <Icon name={pasteSVG} size="22px" />
+                  </Button>
+                  <Button
+                    icon
+                    basic
+                    title={this.state.preview ? 'Hide preview' : 'Show preview'}
+                    onClick={() => {
+                      this.setState({ preview: !this.state.preview });
+                    }}
+                  >
+                    <Icon
+                      name={this.state.preview ? hideSVG : showSVG}
+                      size="22px"
+                    />
                   </Button>
                 </div>
               </Segment>

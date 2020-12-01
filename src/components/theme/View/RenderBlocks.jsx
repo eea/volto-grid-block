@@ -33,6 +33,7 @@ const RenderBlocks = (props) => {
         const data = content[blocksFieldname][block];
         return Block !== null ? (
           <div
+            key={block}
             className={cx(getClasses(data.block_class_name))}
             style={getStyle({
               style: data.block_css?.style,
