@@ -23,6 +23,8 @@ export const GridBlockSchema = () => ({
       title: 'Advanced Row style',
       fields: [
         'row_ui_container',
+        'row_vertical_align',
+        'row_justify_content',
         'row_class_name',
         'row_margin',
         'row_padding',
@@ -75,6 +77,27 @@ export const GridBlockSchema = () => ({
       title: 'UI container',
       type: 'boolean',
     },
+    row_vertical_align: {
+      title: 'Vertical align',
+      type: 'array',
+      choices: [
+        ['top', 'Top'],
+        ['middle', 'Middle'],
+        ['bottom', 'Bottom'],
+      ],
+    },
+    row_justify_content: {
+      title: 'Justify content',
+      type: 'array',
+      choices: [
+        ['flex-start', 'Start'],
+        ['center', 'Center'],
+        ['flex-end', 'End'],
+        ['space-around', 'Space around'],
+        ['space-between', 'Space between'],
+        ['space-evenly', 'Space evenly'],
+      ],
+    },
     row_class_name: {
       title: 'Class name',
       type: 'array',
@@ -111,6 +134,7 @@ export const ColumnSchema = () => ({
       fields: [
         'column_layout',
         'column_ui_container',
+        'column_text_align',
         'column_class_name',
         'column_margin',
         'column_padding',
@@ -128,6 +152,15 @@ export const ColumnSchema = () => ({
     column_ui_container: {
       title: 'UI container',
       type: 'boolean',
+    },
+    column_text_align: {
+      title: 'Text align',
+      type: 'array',
+      choices: [
+        ['left', 'Left'],
+        ['center', 'Center'],
+        ['right', 'Right'],
+      ],
     },
     column_class_name: {
       title: 'Class name',
@@ -167,6 +200,7 @@ export const BlockSchema = () => ({
       id: 'default',
       title: 'Advanced',
       fields: [
+        'block_text_align',
         'block_class_name',
         'block_margin',
         'block_padding',
@@ -177,6 +211,15 @@ export const BlockSchema = () => ({
     },
   ],
   properties: {
+    block_text_align: {
+      title: 'Text align',
+      type: 'array',
+      choices: [
+        ['left', 'Left'],
+        ['center', 'Center'],
+        ['right', 'Right'],
+      ],
+    },
     block_class_name: {
       title: 'Class name',
       type: 'array',

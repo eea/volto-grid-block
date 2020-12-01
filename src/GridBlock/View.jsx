@@ -37,7 +37,11 @@ const View = (props) => {
         <Grid.Row
           className={cx(
             'grid-row',
-            getClasses(data.row_class_name, data.row_ui_container),
+            getClasses(
+              data.row_class_name,
+              data.row_ui_container || false,
+              false,
+            ),
           )}
           style={getStyle({
             style: data.row_css?.style,
@@ -47,7 +51,10 @@ const View = (props) => {
               ? data.row_background_color.color
               : null,
             textColor: null,
+            textAlign: null,
+            justifyContent: data.row_justify_content,
           })}
+          verticalAlign={data.row_vertical_align}
         >
           {columnList.map(([columnId, column], index) => (
             <Grid.Column
@@ -55,7 +62,8 @@ const View = (props) => {
                 'grid-column',
                 getClasses(
                   column.column_class_name,
-                  column.column_ui_container,
+                  column.column_ui_container || false,
+                  false,
                 ),
               )}
               style={getStyle({
@@ -69,6 +77,7 @@ const View = (props) => {
                   ? column.column_text_color.color
                   : null,
               })}
+              textAlign={column.column_text_align}
               key={columnId}
               {...column.column_layout}
             >

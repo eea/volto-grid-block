@@ -55,12 +55,24 @@ export const getColumns = (data) => {
   ]);
 };
 
-export const getClasses = (classes, container) => {
-  const containerClass = container ? 'ui container' : '';
+export const getClasses = (classes, container, textAlign) => {
+  const alignments = {
+    left: 'left aligned',
+    center: 'center aligned',
+    right: 'right aligned',
+    undefined: null,
+    null: null,
+  };
+  const containers = {
+    true: 'ui container',
+    false: null,
+    undefined: null,
+    null: null,
+  };
   const fullClassesArray = isArray(classes)
-    ? [...classes, containerClass]
-    : [containerClass];
-  return fullClassesArray.join(' ');
+    ? [...classes, containers[container], alignments[textAlign]]
+    : [containers[container], alignments[textAlign]];
+  return fullClassesArray.filter((classname) => classname).join(' ');
 };
 
 export const getStyle = (data) => {
@@ -70,12 +82,14 @@ export const getStyle = (data) => {
     padding = null,
     backgroundColor = null,
     textColor = null,
+    justifyContent = null,
   } = data;
   const newStyle = {};
   if (margin) newStyle.margin = margin;
   if (padding) newStyle.padding = padding;
   if (backgroundColor) newStyle.backgroundColor = backgroundColor;
   if (textColor) newStyle.color = textColor;
+  if (justifyContent) newStyle.justifyContent = justifyContent;
   return {
     ...newStyle,
     ...style,
