@@ -12,7 +12,7 @@ Before starting make sure your development environment is properly set. See [Vol
 
 1.  Create new volto app
 
-        $ yo @plone/volto my-volto-project --addon @eeacms/volto-grid-block
+        $ yo @plone/volto my-volto-project --addon @eeacms/volto-grid-block --workspace src/addons/volto-grid-block
         $ cd my-volto-project
 
 1.  Add the following to `mrs.developer.json`:
