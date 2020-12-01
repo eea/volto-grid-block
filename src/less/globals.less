@@ -15,12 +15,20 @@
 }
 
 .makeProperty(@property, @value, @super) when (@super) {
-  @procesedValue: if(isnumber(@value) and @value > 0 and not(ispercentage(@value)), e(%('%srem', @value)), @value);
+  @procesedValue: if(
+    isnumber(@value) and @value > 0 and not(ispercentage(@value)),
+    e(%('%srem', @value)),
+    @value
+  );
   @{property}: @procesedValue !important;
 }
 
 .makeProperty(@property, @value, @super) when (not(@super)) {
-  @procesedValue: if(isnumber(@value) and @value > 0 and not(ispercentage(@value)), e(%('%srem', @value)), @value);
+  @procesedValue: if(
+    isnumber(@value) and @value > 0 and not(ispercentage(@value)),
+    e(%('%srem', @value)),
+    @value
+  );
   @{property}: @procesedValue;
 }
 
@@ -29,7 +37,7 @@
     .@{class}-@{value}-super {
       .makeProperty(@property, @value, @super);
     }
-  })
+  });
 }
 
 .makeClassByArray(@array, @property, @class, @super) when (not(@super)) {
@@ -37,14 +45,14 @@
     .@{class}-@{value} {
       .makeProperty(@property, @value, @super);
     }
-  })
+  });
 }
 
 .makeClassByObject(@object, @values, @property, @class, @super) {
   each(@object, {
     @objectKey: if(@key = default, '', e(%('-%s', @key)));
     .makeClassByArray(@range, e(%('%s%s', @property, @objectKey)), e(%('%s%s', @class, @value)), @super );
-  })
+  });
 }
 
 .contentWidthMedia(@width, @gutter, @offset) {

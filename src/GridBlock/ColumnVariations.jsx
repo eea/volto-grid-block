@@ -1,5 +1,5 @@
 import React from 'react';
-import { Segment, Card } from 'semantic-ui-react';
+import { Card } from 'semantic-ui-react';
 import { Icon } from '@plone/volto/components';
 
 export default ({ data, onChange, children, variants }) => {

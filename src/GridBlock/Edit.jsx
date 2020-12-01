@@ -295,7 +295,6 @@ class Edit extends React.Component {
                       });
                     }}
                     onChangeField={(id, value) => {
-                      console.log(id, value);
                       // this.onChangeColumnData(id, value, columnId)
                     }}
                     pathname={pathname}

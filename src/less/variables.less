@@ -16,17 +16,18 @@
 @display-position: relative, absolute, static, none;
 @align-items: stretch, center, flex-start, flex-end, baseline, initial, inherit;
 @flex-flow: row, column;
-@justify-content: flex-start, flex-end, center, space-between, space-around, initial, inherit;
+@justify-content: flex-start, flex-end, center, space-between, space-around,
+  initial, inherit;
 @text-align: left, right, center, justify, initial, inherit;
 @text-decoration: underline, overline, line-through;
 @range: 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12;
 @position: {
   top: t;
+  right: r;
   bottom: b;
   left: l;
-  right: r;
   default: a;
-}
+};
 
 /*******************************
             Container
@@ -45,16 +46,18 @@
 @mobileWidth: 100%;
 @mobileGutter: 1em;
 
-@tabletMinimumGutter: (@emSize  * 1);
+@tabletMinimumGutter: (@emSize * 1);
 @tabletWidth: @tabletBreakpoint - (@tabletMinimumGutter * 2) - @scrollbarWidth;
 @tabletGutter: auto;
 
-@computerMinimumGutter: (@emSize  * 1.5);
-@computerWidth: @computerBreakpoint - (@computerMinimumGutter * 2) - @scrollbarWidth;
+@computerMinimumGutter: (@emSize * 1.5);
+@computerWidth: @computerBreakpoint - (@computerMinimumGutter * 2) -
+  @scrollbarWidth;
 @computerGutter: auto;
 
-@largeMonitorMinimumGutter: (@emSize  * 2);
-@largeMonitorWidth: @largeMonitorBreakpoint - (@largeMonitorMinimumGutter * 2) - @scrollbarWidth;
+@largeMonitorMinimumGutter: (@emSize * 2);
+@largeMonitorWidth: @largeMonitorBreakpoint - (@largeMonitorMinimumGutter * 2) -
+  @scrollbarWidth;
 @largeMonitorGutter: auto;
 
 /* Coupling (Add Negative Margin to container size) */
@@ -63,19 +66,24 @@
 @veryRelaxedGridGutterWidth: 5rem;
 
 @mobileGridWidth: @mobileWidth;
-@tabletGridWidth: ~"calc("@tabletWidth~" + "@gridGutterWidth~")";
-@computerGridWidth: ~"calc("@computerWidth~" + "@gridGutterWidth~")";
-@largeMonitorGridWidth: ~"calc("@largeMonitorWidth~" + "@gridGutterWidth~")";
+@tabletGridWidth: ~'calc(' @tabletWidth~ ' + ' @gridGutterWidth~ ')';
+@computerGridWidth: ~'calc(' @computerWidth~ ' + ' @gridGutterWidth~ ')';
+@largeMonitorGridWidth: ~'calc(' @largeMonitorWidth~ ' + ' @gridGutterWidth~ ')';
 
 @mobileRelaxedGridWidth: @mobileWidth;
-@tabletRelaxedGridWidth: ~"calc("@tabletWidth~" + "@relaxedGridGutterWidth~")";
-@computerRelaxedGridWidth: ~"calc("@computerWidth~" + "@relaxedGridGutterWidth~")";
-@largeMonitorRelaxedGridWidth: ~"calc("@largeMonitorWidth~" + "@relaxedGridGutterWidth~")";
+@tabletRelaxedGridWidth: ~'calc(' @tabletWidth~ ' + ' @relaxedGridGutterWidth~ ')';
+@computerRelaxedGridWidth: ~'calc(' @computerWidth~ ' + ' @relaxedGridGutterWidth~
+  ')';
+@largeMonitorRelaxedGridWidth: ~'calc(' @largeMonitorWidth~ ' + ' @relaxedGridGutterWidth~
+  ')';
 
 @mobileVeryRelaxedGridWidth: @mobileWidth;
-@tabletVeryRelaxedGridWidth: ~"calc("@tabletWidth~" + "@veryRelaxedGridGutterWidth~")";
-@computerVeryRelaxedGridWidth: ~"calc("@computerWidth~" + "@veryRelaxedGridGutterWidth~")";
-@largeMonitorVeryRelaxedGridWidth: ~"calc("@largeMonitorWidth~" + "@veryRelaxedGridGutterWidth~")";
+@tabletVeryRelaxedGridWidth: ~'calc(' @tabletWidth~ ' + ' @veryRelaxedGridGutterWidth~
+  ')';
+@computerVeryRelaxedGridWidth: ~'calc(' @computerWidth~ ' + ' @veryRelaxedGridGutterWidth~
+  ')';
+@largeMonitorVeryRelaxedGridWidth: ~'calc(' @largeMonitorWidth~ ' + ' @veryRelaxedGridGutterWidth~
+  ')';
 
 /*-------------------
        Types
