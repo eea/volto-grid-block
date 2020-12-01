@@ -20,8 +20,7 @@ This addon enables grid layout grouping of Volto blocks. It introduces a "grid b
     ],
 
     "dependencies": {
-        "@plone/volto": "github:eea/volto#7.11.1-beta.1",
-        "@eeacms/volto-grid-block": "github:eea/volto-grid-block#0.1.0"
+        "@eeacms/volto-grid-block": "^1.0.0"
     }
     ```
 

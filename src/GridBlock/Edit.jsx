@@ -1,84 +1,100 @@
 import React from 'react';
-import { Icon } from '@plone/volto/components';
+import { connect } from 'react-redux';
+import { SidebarPortal, Icon } from '@plone/volto/components';
+import { setSidebarTab } from '@plone/volto/actions';
 import InlineForm from '@plone/volto/components/manage/Form/InlineForm';
-import { SidebarPortal } from '@plone/volto/components';
-import { DragDropContext, Draggable, Droppable } from 'react-beautiful-dnd';
-import { makeSchema, getBlockFullControlSchema } from './schema';
-import cx from 'classnames';
-import move from 'lodash-move';
-import { isEmpty, isEqual, map } from 'lodash';
-import { v4 as uuid } from 'uuid';
-import dragSVG from '@plone/volto/icons/drag.svg';
-import neutralSVG from '@plone/volto/icons/neutral.svg';
-import delightedSVG from '@plone/volto/icons/delighted.svg';
-import { settings } from '~/config';
-import EditBlock from '../components/manage/Blocks/Block/Edit';
+import { BlocksForm } from '@eeacms/volto-blocks-form/components';
+import { emptyBlocksForm } from '@eeacms/volto-blocks-form/helpers';
+import { GRIDBLOCK } from '@eeacms/volto-grid-block/constants';
 import {
-  getColumnClasses,
-  getGridStyle,
-  getRowClasses,
-  getRowStyle,
-} from '../helpers';
-import '../less/gridLayout.less';
-import { GRIDBLOCK } from '../constants';
+  empty,
+  getColumns,
+  getClasses,
+  getStyle,
+} from '@eeacms/volto-grid-block/helpers';
+import { isEmpty } from 'lodash';
+import cx from 'classnames';
+import { Grid, Segment, Button } from 'semantic-ui-react';
+import { blocks, settings } from '~/config';
+import ColumnVariations from './ColumnVariations';
+import EditBlockWrapper from './EditBlockWrapper';
+import { GridBlockSchema, ColumnSchema, BlockSchema } from './schema';
 
-class GridBlockEdit extends React.Component {
+import tuneSVG from '@plone/volto/icons/tune.svg';
+import upSVG from '@plone/volto/icons/up.svg';
+import copySVG from '@plone/volto/icons/copy.svg';
+import pasteSVG from '@plone/volto/icons/paste.svg';
+import enterSVG from '@plone/volto/icons/enter.svg';
+
+import '@eeacms/volto-grid-block/less/grid-block.less';
+
+class Edit extends React.Component {
   constructor(props) {
     super(props);
-
-    this.updatePropsBlocksData = this.updatePropsBlocksData.bind(this);
     this.handleClickOutside = this.handleClickOutside.bind(this);
-    this.onDragUpdate = this.onDragUpdate.bind(this);
-    this.handleDragStart = this.handleDragStart.bind(this);
-    this.onDragEnd = this.onDragEnd.bind(this);
-    this.handleKeyDown = this.handleKeyDown.bind(this);
-    this.onSelectBlock = this.onSelectBlock.bind(this);
-    this.onFullControl = this.onFullControl.bind(this);
-    this.onAddBlock = this.onAddBlock.bind(this);
-    this.onChangeBlock = this.onChangeBlock.bind(this);
-    this.onMutateBlock = this.onMutateBlock.bind(this);
-    this.onChangeField = this.onChangeField.bind(this);
-    this.onFieldChanged = this.onFieldChanged.bind(this);
-    this.onDeleteBlock = this.onDeleteBlock.bind(this);
-    this.onMoveBlock = this.onMoveBlock.bind(this);
-    this.onFocusPreviousBlock = this.onFocusPreviousBlock.bind(this);
-    this.onFocusNextBlock = this.onFocusNextBlock.bind(this);
+    this.onChangeColumnField = this.onChangeColumnField.bind(this);
+    this.onChangeBlockField = this.onChangeBlockField.bind(this);
     this.copyData = this.copyData.bind(this);
     this.pasteData = this.pasteData.bind(this);
-
-    const initialState = this.getInitialState(props);
-    this.gridContainer = React.createRef();
-    this.fieldsToBeChanged = React.createRef({});
-    this.state = initialState;
-    this.updatePropsBlocksData({
-      ...this.state.initialBlocksData,
-    });
-  }
-
-  getInitialState() {
-    const idTrailingBlock = uuid();
-    const blocksData = isEmpty(this.props.data.blocksData?.blocks)
-      ? {
-          blocks: {
-            [idTrailingBlock]: {
-              '@type': settings.defaultBlockType,
-            },
-          },
-          blocks_layout: {
-            items: [idTrailingBlock],
-          },
-        }
-      : { ...this.props.data.blocksData };
-    return {
-      clock: false,
-      initialBlocksData: blocksData,
-      selectedBlock: null,
-      selectedBlockFullControl: null,
-      placeholderProps: null,
-      schema: makeSchema({ ...this.props, schemaTitle: 'Grid blocks' }),
-      blockSchema: getBlockFullControlSchema(this.props),
+    this.state = {
+      activeColumn: null,
+      activeBlock: null,
+      colSelections: {},
     };
+    this.gridBlockContainer = React.createRef();
   }
+
+  handleClickOutside(event) {
+    const sidebars = document.querySelectorAll('.sidebar-container');
+    const modals = document.querySelectorAll('.ui.modal');
+    const blocks = document.querySelectorAll('.block-editor-wrapper');
+    let inSidebar = false;
+    let inModal = false;
+    let inBlock = false;
+
+    for (let sidebar of sidebars) {
+      if (sidebar.contains(event.target) && !inSidebar) {
+        inSidebar = true;
+        break;
+      }
+    }
+
+    for (let modal of modals) {
+      if (modal.contains(event.target) && !inModal) {
+        inModal = true;
+        break;
+      }
+    }
+
+    for (let block of blocks) {
+      if (block.contains(event.target) && !inBlock) {
+        inBlock = true;
+        break;
+      }
+    }
+
+    if (
+      this.gridBlockContainer &&
+      this.gridBlockContainer.current &&
+      (!this.gridBlockContainer.current.contains(event.target) || !inBlock) &&
+      !inSidebar &&
+      !inModal
+    ) {
+      this.setState({
+        activeColumn: null,
+        activeBlock: null,
+        colSelections: {},
+      });
+    }
+  }
+
+  createFrom = (initialData) => {
+    const { grid_cols, grid_size } = initialData;
+    return {
+      data: empty(grid_cols.length, grid_cols),
+      grid_size,
+    };
+  };
 
   componentDidMount() {
     document.addEventListener('mousedown', this.handleClickOutside, false);
@@ -88,414 +104,53 @@ class GridBlockEdit extends React.Component {
     document.removeEventListener('mousedown', this.handleClickOutside, false);
   }
 
-  componentDidUpdate(prevProps) {
-    const data = this.props.data;
-    const layoutOverwrite = data['grid_overwrite_layout'];
-    const layoutBlocks =
-      this.props.properties?.['@components']?.layout?.blocks || {};
-    const layoutBlockId = data['@layout'];
-    const layoutBlockData = {
-      ...(layoutBlocks[layoutBlockId] || {}),
-      '@layout': layoutBlockId,
-      grid_overwrite_layout: layoutOverwrite,
-    };
-
-    if (
-      layoutBlockId &&
-      layoutBlocks[layoutBlockId] &&
-      typeof layoutOverwrite !== 'undefined' &&
-      !layoutOverwrite &&
-      this.props.properties['@type'] &&
-      !isEqual(layoutBlockData, data)
-    ) {
-      this.props.onChangeBlock(this.props.block, {
-        ...(layoutBlockData || {}),
-      });
-    } else if (
-      layoutBlockId &&
-      layoutBlocks[layoutBlockId] &&
-      typeof layoutOverwrite === 'undefined'
-    ) {
-      this.props.onChangeBlock(this.props.block, {
-        ...this.props.data,
-        grid_overwrite_layout: false,
-      });
-    }
-  }
-
-  updatePropsBlocksData(newBlocksData) {
-    return this.props.onChangeBlock(this.props.block, {
-      ...this.props.data,
-      blocksData: {
-        ...newBlocksData,
-      },
-    });
-  }
-
-  handleClickOutside(event) {
-    const sidebars = document.querySelectorAll('.sidebar-container');
-    const slateToolbars = document.querySelectorAll('.slate-toolbar');
-    const modals = document.querySelectorAll('.ui.modal');
-    let inSidebar = false;
-    let inSlateToolbar = false;
-    let inModal = false;
-    for (let sidebar of sidebars) {
-      if (sidebar.contains(event.target) && !inSidebar) {
-        inSidebar = true;
-        break;
-      }
-    }
-    for (let toolbar of slateToolbars) {
-      if (toolbar.contains(event.target) && !inSidebar) {
-        inSlateToolbar = true;
-        break;
-      }
-    }
-    for (let modal of modals) {
-      if (modal.contains(event.target) && !inModal) {
-        inModal = true;
-        break;
-      }
-    }
-    if (
-      this.gridContainer &&
-      this.gridContainer.current &&
-      !this.gridContainer.current.contains(event.target) &&
-      !inSidebar &&
-      !inSlateToolbar &&
-      !inModal
-    ) {
-      this.setState({ selectedBlock: null, selectedBlockFullControl: null });
-    }
-  }
-
-  onDragEnd(result) {
-    const { source, destination } = result;
-    if (!destination) {
-      return;
-    }
-
-    this.setState({
-      placeholderProps: {},
-    });
-
-    return this.updatePropsBlocksData({
-      ...this.props.data.blocksData,
-      blocks_layout: {
-        ...this.props.data.blocksData.blocks_layout,
-        items: move(
-          this.props.data.blocksData.blocks_layout.items,
-          source.index,
-          destination.index,
-        ),
-      },
-    });
-  }
-
-  handleDragStart(event) {
-    const queryAttr = 'data-rbd-draggable-id';
-    const domQuery = `[${queryAttr}='${event.draggableId}']`;
-    const draggedDOM = document.querySelector(domQuery);
-
-    if (!draggedDOM) {
-      return;
-    }
-
-    const { clientHeight, clientWidth } = draggedDOM;
-    const sourceIndex = event.source.index;
-    var clientY =
-      parseFloat(window.getComputedStyle(draggedDOM.parentNode).paddingTop) +
-      [...draggedDOM.parentNode.children]
-        .slice(0, sourceIndex)
-        .reduce((total, curr) => {
-          const style = curr.currentStyle || window.getComputedStyle(curr);
-          const marginBottom = parseFloat(style.marginBottom);
-          return total + curr.clientHeight + marginBottom;
-        }, 0);
-
-    this.setState({
-      placeholderProps: {
-        clientHeight,
-        clientWidth,
-        clientY,
-        clientX: parseFloat(
-          window.getComputedStyle(draggedDOM.parentNode).paddingLeft,
-        ),
-      },
-    });
-  }
-
-  onDragUpdate(update) {
-    if (!update.destination) {
-      return;
-    }
-    const draggableId = update.draggableId;
-    const destinationIndex = update.destination.index;
-
-    const queryAttr = 'data-rbd-draggable-id';
-    const domQuery = `[${queryAttr}='${draggableId}']`;
-    const draggedDOM = document.querySelector(domQuery);
-
-    if (!draggedDOM) {
-      return;
-    }
-    const { clientHeight, clientWidth } = draggedDOM;
-    const sourceIndex = update.source.index;
-    const childrenArray = [...draggedDOM.parentNode.children];
-    const movedItem = childrenArray[sourceIndex];
-    childrenArray.splice(sourceIndex, 1);
-
-    const updatedArray = [
-      ...childrenArray.slice(0, destinationIndex),
-      movedItem,
-      ...childrenArray.slice(destinationIndex + 1),
-    ];
-
-    var clientY =
-      parseFloat(window.getComputedStyle(draggedDOM.parentNode).paddingTop) +
-      updatedArray.slice(0, destinationIndex).reduce((total, curr) => {
-        const style = curr.currentStyle || window.getComputedStyle(curr);
-        const marginBottom = parseFloat(style.marginBottom);
-        return total + curr.clientHeight + marginBottom;
-      }, 0);
-    this.setState({
-      placeholderProps: {
-        clientHeight,
-        clientWidth,
-        clientY,
-        clientX: parseFloat(
-          window.getComputedStyle(draggedDOM.parentNode).paddingLeft,
-        ),
-      },
-    });
-  }
-
-  handleKeyDown(
-    e,
-    index,
-    block,
-    node,
-    {
-      disableEnter = false,
-      disableArrowUp = false,
-      disableArrowDown = false,
-      disableBackspace = false,
-    } = {},
-  ) {
-    if (e.key === 'ArrowUp' && !disableArrowUp) {
-      this.onFocusPreviousBlock(block);
-      e.preventDefault();
-    }
-    if (e.key === 'ArrowDown' && !disableArrowDown) {
-      this.onFocusNextBlock(block);
-      e.preventDefault();
-    }
-    if (e.key === 'Enter' && !disableEnter) {
-      this.onAddBlock(
-        { '@type': settings.defaultBlockType },
-        this.props.data.blocksData.blocks_layout.items.indexOf(block),
-      );
-      e.preventDefault();
-    }
-    if (e.key === 'Control') {
-      this.props.onAddBlock(settings.defaultBlockType, this.props.index + 1);
-    }
-  }
-
-  onSelectBlock = (id) => {
-    if (!this.props.selected) {
-      setTimeout(() => {
-        this.setState({
-          selectedBlock: id,
-        });
-      }, 100);
-    } else {
-      this.setState({
-        selectedBlock: id,
-      });
-    }
-  };
-
-  onFullControl = (id) => {
-    if (this.state.selectedBlockFullControl === id) {
-      this.setState({
-        selectedBlockFullControl: null,
-      });
-    } else {
-      this.setState(
-        {
-          selectedBlockFullControl: null,
-        },
-        () =>
-          this.setState({
-            selectedBlockFullControl: id,
-          }),
-      );
-    }
-  };
-
-  onAddBlock(incoming, position = -1) {
-    const blocksData = { ...(this.props.data.blocksData || {}) };
-    const blockId = uuid();
-    const newBlocks = {
-      ...(blocksData?.blocks || {}),
-      [blockId]: {
-        ...incoming,
-      },
-    };
-    const newBlocksLayout = {
-      ...(blocksData?.blocks_layout || {}),
-    };
-    if (position > -1) {
-      newBlocksLayout.items.splice(position + 1, 0, blockId);
-    } else {
-      newBlocksLayout.items = [
-        ...(blocksData?.blocks_layout?.items || []),
-        blockId,
-      ];
-    }
-
-    this.updatePropsBlocksData({
-      ...blocksData,
-      blocks: {
-        ...newBlocks,
-      },
-      blocks_layout: {
-        ...newBlocksLayout,
-      },
-    });
-    return blockId;
-  }
-
-  onChangeBlock(current, incoming) {
-    const blocksData = { ...(this.props.data.blocksData || {}) };
-    const newBlocksLayoutItems = [...blocksData.blocks_layout.items];
-    this.updatePropsBlocksData({
-      ...blocksData,
-      blocks: {
-        ...blocksData.blocks,
-        [current]: {
-          ...incoming,
-        },
-      },
-      blocks_layout: {
-        ...blocksData.blocks_layout,
-        items: [...newBlocksLayoutItems],
-      },
-    });
-    return current;
-  }
-
-  onMutateBlock(current, incoming) {
-    const idTrailingBlock = uuid();
-    const blocksData = { ...(this.props.data.blocksData || {}) };
-    const newBlocksLayoutItems = [
-      ...blocksData.blocks_layout.items,
-      idTrailingBlock,
-    ];
-    this.updatePropsBlocksData({
-      ...blocksData,
-      blocks: {
-        ...blocksData.blocks,
-        [current]: {
-          ...incoming,
-        },
-        [idTrailingBlock]: {
-          '@type': settings.defaultBlockType,
-        },
-      },
-      blocks_layout: {
-        ...blocksData.blocks_layout,
-        items: [...newBlocksLayoutItems],
-      },
-    });
-    return current;
-  }
-
-  onChangeField(fieldName, newData) {
-    if (fieldName === 'blocks' || fieldName === 'blocks_layout') {
-      this.fieldsToBeChanged.current = {
-        ...this.fieldsToBeChanged.current,
-        [fieldName]: newData,
-      };
-      this.onFieldChanged(
-        this.fieldsToBeChanged.current['blocks'] &&
-          this.fieldsToBeChanged.current['blocks_layout'],
-      );
-    }
-  }
-
-  onFieldChanged = (canUpdate = false) => {
-    if (canUpdate) {
-      this.props.onChangeBlock(this.props.block, {
-        ...(this.props.data || {}),
-        blocksData: { ...this.fieldsToBeChanged.current },
-      });
-      this.fieldsToBeChanged.current = {};
-    }
-  };
-
-  onDeleteBlock(current) {
-    if (this.props.data.blocksData.blocks_layout.items.length === 1) {
-      return this.props.onDeleteBlock(this.props.block);
-    } else {
-      const newBlocks = {
-        ...this.props.data.blocksData.blocks,
-      };
-      const newBlocksLayoutItems = [
-        ...this.props.data.blocksData.blocks_layout.items,
-      ];
-      const position = newBlocksLayoutItems.indexOf(current);
-      delete newBlocks[current];
-      if (position > -1) {
-        newBlocksLayoutItems.splice(position, 1);
-      }
-
-      return this.updatePropsBlocksData({
-        ...this.props.data.blocksData,
+  onChangeColumnField = (id, value, columnId) => {
+    const { data, onChangeBlock, block } = this.props;
+    const columnsData = data.data;
+    onChangeBlock(block, {
+      ...data,
+      data: {
+        ...columnsData,
         blocks: {
-          ...newBlocks,
+          ...columnsData.blocks,
+          [columnId]: {
+            ...columnsData.blocks?.[columnId],
+            [id]: value,
+          },
         },
-        blocks_layout: {
-          ...this.props.data.blocksData.blocks_layout,
-          items: [...newBlocksLayoutItems],
+      },
+    });
+  };
+
+  onChangeBlockField = (id, value, columnId, blockId) => {
+    const { data, onChangeBlock, block } = this.props;
+    const columnsData = data.data;
+    onChangeBlock(block, {
+      ...data,
+      data: {
+        ...columnsData,
+        blocks: {
+          ...columnsData.blocks,
+          [columnId]: {
+            ...columnsData.blocks?.[columnId],
+            blocks: {
+              ...columnsData.blocks?.[columnId].blocks,
+              [blockId]: {
+                ...columnsData.blocks?.[columnId].blocks[blockId],
+                [id]: value,
+              },
+            },
+          },
         },
-      });
-    }
-  }
+      },
+    });
+  };
 
-  onMoveBlock(current, incoming) {}
-
-  onFocusPreviousBlock(block) {
-    const blocks_layout = this.props.data.blocksData?.blocks_layout || {};
-    if (this.state.selectedBlock) {
-      const position = blocks_layout.items.indexOf(block);
-      this.setState({
-        selectedBlock:
-          blocks_layout.items[position - 1] ||
-          blocks_layout.items[blocks_layout.items.length - 1],
-      });
-    }
-  }
-
-  onFocusNextBlock(block) {
-    const blocks_layout = this.props.data.blocksData?.blocks_layout || {
-      items: [],
-    };
-    if (this.state.selectedBlock) {
-      const position = blocks_layout.items.indexOf(block);
-      this.setState({
-        selectedBlock:
-          blocks_layout.items[position + 1] || blocks_layout.items[0],
-      });
-    }
-  }
-
-  copyData() {
+  copyData = () => {
     navigator.clipboard.writeText(JSON.stringify(this.props.data));
-  }
+  };
 
-  pasteData() {
+  pasteData = () => {
     navigator.clipboard.readText().then((text) => {
       try {
         const newData = JSON.parse(text);
@@ -506,193 +161,311 @@ class GridBlockEdit extends React.Component {
         }
       } catch {}
     });
-  }
+  };
 
   render() {
-    const blocks = this.props.data.blocksData?.blocks || {};
-    const blocks_layout = this.props.data.blocksData?.blocks_layout || {
-      items: [],
-    };
+    const {
+      data,
+      block,
+      selected,
+      pathname,
+      onChangeBlock,
+      onAddBlock,
+    } = this.props;
+    const columnsData = data.data;
+    const metadata = this.props.metadata || this.props.properties;
+    const { grid_size } = data;
+    const columnList = getColumns(columnsData);
+
+    const activeColumnData = this.state.activeColumn
+      ? columnsData.blocks[this.state.activeColumn]
+      : {};
+    const activeBlockData =
+      this.state.activeColumn && this.state.activeBlock
+        ? columnsData.blocks[this.state.activeColumn].blocks[
+            this.state.activeBlock
+          ]
+        : {};
+
+    const { variants } = blocks.blocksConfig[GRIDBLOCK];
+
     return (
       <div
         role="presentation"
-        className={cx(
-          'grid-layout edit',
-          this.props.data.grid_fluid ? 'ui container' : '',
-        )}
-        style={{ ...(getGridStyle(this.props.data) || {}) }}
-        ref={this.gridContainer}
+        className="grid-block-container edit"
+        ref={this.gridBlockContainer}
       >
-        <DragDropContext
-          onDragEnd={this.onDragEnd}
-          onDragStart={this.handleDragStart}
-          onDragUpdate={this.onDragUpdate}
-        >
-          <Droppable droppableId="edit-form">
-            {(provided, snapshot) => (
-              <div
-                ref={provided.innerRef}
-                {...provided.droppableProps}
-                style={{
-                  position: 'relative',
-                  ...(getRowStyle(this.props.data) || {}),
-                }}
-                className={cx('row edit', getRowClasses(this.props.data))}
-              >
-                {map(
-                  blocks_layout.items,
-                  (block, index) =>
-                    blocks?.[block]?.['@type'] && (
-                      <Draggable draggableId={block} index={index} key={block}>
-                        {(provided) => (
-                          <div
-                            ref={provided.innerRef}
-                            {...provided.draggableProps}
-                            className={cx(
-                              'column edit',
-                              `block-editor-${blocks[block]['@type']}`,
-                              settings.defaultBlockType ===
-                                blocks[block]['@type'] &&
-                                !blocks[block].plaintext
-                                ? 'default-block-type empty'
-                                : 'default-block-type',
-                              getColumnClasses(blocks[block]),
-                            )}
-                          >
-                            <div
-                              style={{
-                                position: 'relative',
-                                height: '100%',
+        {!Object.keys(data.data || {}).length ? (
+          <ColumnVariations
+            variants={variants}
+            data={data}
+            onChange={(initialData) => {
+              onChangeBlock(block, {
+                ...data,
+                ...this.createFrom(initialData),
+              });
+            }}
+          />
+        ) : (
+          <Grid
+            columns={grid_size}
+            className={cx('grid-block', getClasses(data.grid_class_name))}
+            style={getStyle({
+              style: data.grid_css?.style,
+              margin: data.grid_margin,
+              padding: data.grid_padding,
+              backgroundColor: data.grid_background_color?.active
+                ? data.grid_background_color.color
+                : null,
+              textColor: data.grid_text_color?.active
+                ? data.grid_text_color.color
+                : null,
+            })}
+            stackable
+          >
+            <Grid.Row
+              className={cx(
+                'grid-row',
+                getClasses(data.row_class_name, data.row_ui_container),
+              )}
+              style={getStyle({
+                style: data.row_css?.style,
+                margin: data.row_margin,
+                padding: data.row_padding,
+                backgroundColor: data.row_background_color?.active
+                  ? data.row_background_color.color
+                  : null,
+                textColor: null,
+              })}
+            >
+              {columnList.map(([columnId, column], index) => (
+                <Grid.Column
+                  className={cx(
+                    'grid-column',
+                    getClasses(
+                      column.column_class_name,
+                      column.column_ui_container,
+                    ),
+                  )}
+                  style={getStyle({
+                    style: column.column_css?.style,
+                    margin: column.column_margin,
+                    padding: column.column_padding,
+                    backgroundColor: column.column_background_color?.active
+                      ? column.column_background_color.color
+                      : null,
+                    textColor: column.column_text_color?.active
+                      ? column.column_text_color.color
+                      : null,
+                  })}
+                  key={columnId}
+                  {...column.column_layout}
+                >
+                  <BlocksForm
+                    key={columnId}
+                    metadata={metadata}
+                    properties={isEmpty(column) ? emptyBlocksForm() : column}
+                    selectedBlock={
+                      selected ? this.state.colSelections[columnId] : null
+                    }
+                    onSelectBlock={(blockId) => {
+                      this.setState(
+                        {
+                          colSelections: {
+                            [columnId]: blockId,
+                          },
+                          activeColumn: null,
+                          activeBlock: null,
+                        },
+                        () => {
+                          this.props.setSidebarTab(1);
+                        },
+                      );
+                    }}
+                    onChangeFormData={(newFormData) => {
+                      onChangeBlock(block, {
+                        ...data,
+                        data: {
+                          ...columnsData,
+                          blocks: {
+                            ...columnsData.blocks,
+                            [columnId]: newFormData,
+                          },
+                        },
+                      });
+                    }}
+                    onChangeField={(id, value) => {
+                      console.log(id, value);
+                      // this.onChangeColumnData(id, value, columnId)
+                    }}
+                    pathname={pathname}
+                  >
+                    {({ draginfo }, editBlock, blockProps) => (
+                      <EditBlockWrapper
+                        draginfo={draginfo}
+                        blockProps={{
+                          ...blockProps,
+                          latest:
+                            column.blocks_layout.items.indexOf(
+                              blockProps.block,
+                            ) ===
+                            column.blocks_layout.items.length - 1,
+                        }}
+                        extraControls={
+                          <>
+                            <Button
+                              icon
+                              basic
+                              title="Edit column"
+                              onClick={() => {
+                                this.setState({
+                                  activeColumn: columnId,
+                                  activeBlock: blockProps.block,
+                                });
+                                this.props.setSidebarTab(1);
                               }}
                             >
-                              <div
-                                style={{
-                                  visibility:
-                                    this.state.selectedBlock === block
-                                      ? 'visible'
-                                      : 'hidden',
-                                  display: 'inline-block',
-                                }}
-                                {...provided.dragHandleProps}
-                                className="drag handle wrapper"
-                              >
-                                <Icon name={dragSVG} size="18px" />
-                              </div>
-                              <div
-                                style={{
-                                  visibility:
-                                    this.state.selectedBlock === block
-                                      ? 'visible'
-                                      : 'hidden',
-                                  display: 'inline-block',
-                                }}
-                                className="drag handle star wrapper"
-                              >
-                                <Icon
-                                  name={
-                                    this.state.selectedBlockFullControl ===
-                                    block
-                                      ? delightedSVG
-                                      : neutralSVG
-                                  }
-                                  size="18px"
-                                  onClick={() => {
-                                    this.onFullControl(block);
-                                  }}
-                                />
-                              </div>
-                              <EditBlock
-                                id={block}
-                                index={index}
-                                type={blocks[block]['@type']}
-                                key={block}
-                                customHandleKeyDown={this.handleKeyDown}
-                                handleKeyDown={this.handleKeyDown}
-                                onAddBlock={this.onAddBlock}
-                                onChangeBlock={this.onChangeBlock}
-                                onMutateBlock={this.onMutateBlock}
-                                onChangeField={this.onChangeField}
-                                onDeleteBlock={this.onDeleteBlock}
-                                onSelectBlock={this.onSelectBlock}
-                                onMoveBlock={this.onMoveBlock}
-                                onFocusPreviousBlock={this.onFocusPreviousBlock}
-                                onFocusNextBlock={this.onFocusNextBlock}
-                                properties={{
-                                  ...this.props.properties,
-                                  ...(this.props.data.blocksData || {}),
-                                }}
-                                data={blocks[block]}
-                                pathname={this.props.pathname}
-                                block={block}
-                                selected={
-                                  this.state.selectedBlock === block &&
-                                  this.state.selectedBlockFullControl !== block
-                                }
-                              />
-                            </div>
-                          </div>
-                        )}
-                      </Draggable>
-                    ),
-                )}
-                {provided.placeholder}
-                {!isEmpty(this.state.placeholderProps) && (
-                  <div
-                    style={{
-                      position: 'absolute',
-                      top: `${this.state.placeholderProps.clientY}px`,
-                      height: `${
-                        this.state.placeholderProps.clientHeight + 18
-                      }px`,
-                      background: '#eee',
-                      width: `${this.state.placeholderProps.clientWidth}px`,
-                      borderRadius: '3px',
+                              <Icon name={tuneSVG} className="" size="19px" />
+                            </Button>
+                          </>
+                        }
+                      >
+                        {editBlock}
+                      </EditBlockWrapper>
+                    )}
+                  </BlocksForm>
+                </Grid.Column>
+              ))}
+            </Grid.Row>
+          </Grid>
+        )}
+        {selected &&
+        !this.state.activeColumn &&
+        Object.keys(this.state.colSelections).length === 0 ? (
+          <SidebarPortal selected={true}>
+            <div className="grid-block-sidebar no-inline-form-header">
+              <Segment>
+                <header className="header pulled">
+                  <h2>{GridBlockSchema().title}</h2>
+                </header>
+                <div className="buttons-wrapper">
+                  <Button
+                    icon
+                    basic
+                    title="Add new block below the grid"
+                    onClick={() => {
+                      onAddBlock(
+                        settings.defaultBlockType,
+                        this.props.index + 1,
+                      );
                     }}
-                  />
-                )}
-              </div>
-            )}
-          </Droppable>
-        </DragDropContext>
-        {this.state.schema &&
-        !this.state.selectedBlockFullControl &&
-        !this.state.selectedBlock ? (
-          <SidebarPortal selected={this.props.selected}>
-            <InlineForm
-              schema={this.state.schema}
-              title={this.state.schema.title}
-              onChangeField={(field, data) => {
-                if (field === 'blocksData') {
-                  this.updatePropsBlocksData(data);
-                } else if (field === 'copy') {
-                  this.copyData();
-                } else if (field === 'paste') {
-                  this.pasteData();
-                } else {
-                  this.props.onChangeBlock(this.props.block, {
-                    ...(this.props.data || {}),
-                    [field]: data,
+                  >
+                    <Icon name={enterSVG} className="" size="22px" />
+                  </Button>
+                  <Button
+                    icon
+                    basic
+                    title="Copy grid block data"
+                    onClick={this.copyData}
+                  >
+                    <Icon name={copySVG} className="" size="22px" />
+                  </Button>
+                  <Button
+                    icon
+                    basic
+                    title="Paste grid block data"
+                    onClick={this.pasteData}
+                  >
+                    <Icon name={pasteSVG} className="" size="22px" />
+                  </Button>
+                </div>
+              </Segment>
+              <InlineForm
+                schema={GridBlockSchema()}
+                title="Grid block"
+                onChangeField={(id, value) => {
+                  if (id === 'Activate column') {
+                    this.setState(
+                      {
+                        activeColumn: value,
+                        colSelections: {
+                          [value]:
+                            columnsData.blocks[value].blocks_layout.items[0],
+                        },
+                      },
+                      () => {
+                        this.props.setSidebarTab(1);
+                      },
+                    );
+                    return;
+                  }
+                  onChangeBlock(block, {
+                    ...data,
+                    [id]: value,
                   });
-                }
-              }}
-              formData={this.props.data || {}}
-              block={this.props.block}
-            />
+                }}
+                formData={data}
+              />
+            </div>
           </SidebarPortal>
-        ) : this.state.blockSchema && this.state.selectedBlockFullControl ? (
-          <SidebarPortal selected={this.props.selected}>
-            <InlineForm
-              schema={this.state.blockSchema}
-              title={this.state.blockSchema.title}
-              onChangeField={(field, newData) => {
-                this.onChangeBlock(this.state.selectedBlockFullControl, {
-                  ...blocks[this.state.selectedBlockFullControl],
-                  [field]: newData,
-                });
-              }}
-              formData={blocks[this.state.selectedBlockFullControl] || {}}
-              block={this.state.selectedBlockFullControl}
-            />
+        ) : selected && this.state.activeColumn && !this.state.activeBlock ? (
+          <SidebarPortal selected={true}>
+            <div className="grid-block-sidebar">
+              <Segment>
+                <Button
+                  onClick={() =>
+                    this.setState({
+                      activeColumn: null,
+                      activeBlock: null,
+                      colSelections: {},
+                    })
+                  }
+                >
+                  <Icon name={upSVG} size="14px" />
+                  Edit grid block
+                </Button>
+              </Segment>
+              <InlineForm
+                schema={ColumnSchema()}
+                title={`Column ${
+                  columnsData.blocks_layout.items.indexOf(
+                    this.state.activeColumn,
+                  ) + 1
+                }`}
+                onChangeField={(id, value) => {
+                  this.onChangeColumnField(id, value, this.state.activeColumn);
+                }}
+                formData={activeColumnData}
+              />
+            </div>
+          </SidebarPortal>
+        ) : selected &&
+          this.state.activeBlock &&
+          Object.keys(activeBlockData).length &&
+          this.state.activeBlock ===
+            this.state.colSelections[this.state.activeColumn] ? (
+          <SidebarPortal selected={true}>
+            <div className="grid-block-sidebar">
+              <Segment>
+                <Button onClick={() => this.setState({ activeBlock: null })}>
+                  <Icon name={upSVG} size="14px" />
+                  Edit parent column block
+                </Button>
+              </Segment>
+              <InlineForm
+                schema={BlockSchema()}
+                title={`Block (${activeBlockData['@type']})`}
+                onChangeField={(id, value) => {
+                  this.onChangeBlockField(
+                    id,
+                    value,
+                    this.state.activeColumn,
+                    this.state.activeBlock,
+                  );
+                }}
+                formData={activeBlockData}
+              />
+            </div>
           </SidebarPortal>
         ) : (
           ''
@@ -702,4 +475,9 @@ class GridBlockEdit extends React.Component {
   }
 }
 
-export default GridBlockEdit;
+export default connect(
+  (state, props) => {
+    return {};
+  },
+  { setSidebarTab },
+)(Edit);

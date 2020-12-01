@@ -1,7 +1,5 @@
-@type: 'extra';
-@element: 'custom';
-
 @import (multiple, reference, optional) '../../theme.config';
+@import './variables.less';
 
 /* Enables customization of addons */
 .loadAddonOverrides() {
@@ -14,4 +12,100 @@
   @import (optional) '@{addonelement}.variables';
   @import (optional)
     '@{siteFolder}/../addons/@{addon}/@{addontype}s/@{addonelement}.variables';
+}
+
+.makeProperty(@property, @value, @super) when (@super) {
+  @procesedValue: if(isnumber(@value) and @value > 0 and not(ispercentage(@value)), e(%('%srem', @value)), @value);
+  @{property}: @procesedValue !important;
+}
+
+.makeProperty(@property, @value, @super) when (not(@super)) {
+  @procesedValue: if(isnumber(@value) and @value > 0 and not(ispercentage(@value)), e(%('%srem', @value)), @value);
+  @{property}: @procesedValue;
+}
+
+.makeClassByArray(@array, @property, @class, @super) when (@super) {
+  each(@array, {
+    .@{class}-@{value}-super {
+      .makeProperty(@property, @value, @super);
+    }
+  })
+}
+
+.makeClassByArray(@array, @property, @class, @super) when (not(@super)) {
+  each(@array, {
+    .@{class}-@{value} {
+      .makeProperty(@property, @value, @super);
+    }
+  })
+}
+
+.makeClassByObject(@object, @values, @property, @class, @super) {
+  each(@object, {
+    @objectKey: if(@key = default, '', e(%('-%s', @key)));
+    .makeClassByArray(@range, e(%('%s%s', @property, @objectKey)), e(%('%s%s', @class, @value)), @super );
+  })
+}
+
+.contentWidthMedia(@width, @gutter, @offset) {
+  .ui.container {
+    width: @width !important;
+    margin-right: @gutter !important;
+    margin-left: @gutter !important;
+  }
+}
+
+.makeClassByObject(@position, @range, margin, m, false);
+.makeClassByObject(@position, @range, margin, m, true);
+.makeClassByObject(@position, @range, padding, p, false);
+.makeClassByObject(@position, @range, padding, p, true);
+
+.makeClassByArray(@display, display, display, false);
+.makeClassByArray(@display, display, display, true);
+.makeClassByArray(@display-position, position, position, false);
+.makeClassByArray(@display-position, position, position, true);
+.makeClassByArray(@align-items, align-items, align-items, false);
+.makeClassByArray(@align-items, align-items, align-items, true);
+.makeClassByArray(@flex-flow, flex-flow, flex-flow, false);
+.makeClassByArray(@flex-flow, flex-flow, flex-flow, true);
+.makeClassByArray(@justify-content, justify-content, justify-content, false);
+.makeClassByArray(@justify-content, justify-content, justify-content, true);
+.makeClassByArray(@text-align, text-align, text-align, false);
+.makeClassByArray(@text-align, text-align, text-align, true);
+.makeClassByArray(@text-decoration, text-decoration, text-decoration, false);
+.makeClassByArray(@text-decoration, text-decoration, text-decoration, true);
+
+@media only screen and (min-width: @wideScreenMinWidth) {
+  .makeClassByObject(@position, @range, margin, ws-m, true);
+  .makeClassByObject(@position, @range, margin, ws-m, false);
+  .makeClassByObject(@position, @range, padding, ws-p, true);
+  .makeClassByObject(@position, @range, padding, ws-p, false);
+}
+
+@media only screen and (max-width: @largeScreenMaxWidth) and (min-width: @largeScreenMinWidth) {
+  .makeClassByObject(@position, @range, margin, ls-m, true);
+  .makeClassByObject(@position, @range, margin, ls-m, false);
+  .makeClassByObject(@position, @range, padding, ls-p, true);
+  .makeClassByObject(@position, @range, padding, ls-p, false);
+}
+
+@media only screen and (min-width: @computerScreenMinWidth) {
+  .makeClassByObject(@position, @range, margin, cs-m, true);
+  .makeClassByObject(@position, @range, margin, cs-m, false);
+  .makeClassByObject(@position, @range, padding, cs-p, true);
+  .makeClassByObject(@position, @range, padding, cs-p, false);
+}
+
+@media only screen and (max-width: @tabletScreenMaxWidth) and (min-width: @tabletScreenMinWidth) {
+  .makeClassByObject(@position, @range, margin, ts-m, true);
+  .makeClassByObject(@position, @range, margin, ts-m, false);
+  .makeClassByObject(@position, @range, padding, ts-p, true);
+  .makeClassByObject(@position, @range, padding, ts-p, false);
+}
+
+@media only screen and (max-width: @mobileScreenMaxWidth) {
+  .makeClassByObject(@position, @range, margin, ms-m, true);
+  .makeClassByObject(@position, @range, margin, ms-m, false);
+  .makeClassByObject(@position, @range, padding, ms-p, true);
+  .makeClassByObject(@position, @range, padding, ms-p, false);
 }

@@ -1,124 +1,83 @@
-import cx from 'classnames';
-import { isEmpty, isObject } from 'lodash';
+import { v4 as uuid } from 'uuid';
+import isArray from 'lodash/isArray';
+import transform from 'css-to-react-native';
+import autoprefixer from 'autoprefixer';
+import postcss from 'postcss';
+import { emptyBlocksForm } from '@eeacms/volto-blocks-form/helpers';
 
-const makeSuperClass = (className, isSuper) => {
-  if (isSuper) return `${className}-super`;
-  return className;
-};
-
-export const getColumnLayout = (gridLayout = {}) => {
-  const deafult = gridLayout.default || 12;
-  const xs = gridLayout.xs || null;
-  const sm = gridLayout.sm || null;
-  const md = gridLayout.md || null;
-  const lg = gridLayout.lg || null;
-
-  return cx(
-    `column-${deafult}`,
-    xs ? `xs-${xs}` : '',
-    sm ? `sm-${sm}` : '',
-    md ? `md-${md}` : '',
-    lg ? `lg-${lg}` : '',
-  );
-};
-
-export const getColumnClasses = (block = {}) => {
-  const columnSuper = block.grid_column_super;
-  const columnLayout = getColumnLayout({
-    default: block.grid_column_default,
-    xs: block.grid_column_xs,
-    sm: block.grid_column_sm,
-    md: block.grid_column_md,
-    lg: block.grid_column_lg,
+export const cssParser = (css) => {
+  return new Promise((resolve, reject) => {
+    postcss([autoprefixer])
+      .process(css, {})
+      .then((result) => {
+        const cssArray = [];
+        result.root.nodes.forEach((node) => {
+          if (node.prop && node.value) {
+            cssArray.push([node.prop, node.value]);
+          }
+        });
+        resolve(transform(cssArray));
+      })
+      .catch((error) => {
+        reject({});
+      });
   });
-  const columnClassName = block.grid_column_class_name;
-  const columnTextAlignment = makeSuperClass(
-    `text-align-${block.grid_column_align_text || 'left'}`,
-    columnSuper,
-  );
-  return cx(columnLayout, columnClassName, columnTextAlignment);
 };
 
-export const getColumnStyle = (block = {}) => {
-  const columnInlineStyle = isObject(block.grid_column_inline_style)
-    ? block.grid_column_inline_style
-    : {};
-  const columnTextColor = block.grid_column_text_color_active
-    ? block.grid_column_text_color || 'inherit'
-    : 'inherit';
-  const columnBackgroundColor = block.grid_column_background_color_active
-    ? block.grid_column_background_color || 'inherit'
-    : 'inherit';
-  const columnMargin = block.grid_column_margin
-    ? block.grid_column_margin
-    : 'unset';
-  const columnPadding = block.grid_column_padding
-    ? block.grid_column_padding
-    : 'unset';
+export const reorder = (list, startIndex, endIndex) => {
+  const result = Array.from(list);
+  const [removed] = result.splice(startIndex, 1);
+  result.splice(endIndex, 0, removed);
+
+  return result;
+};
+
+export const empty = (count, layouts) => {
+  const blocks = {};
+  const items = [];
+  for (let x = 0; x < count; x++) {
+    const id = uuid();
+    blocks[id] = { ...emptyBlocksForm(), column_layout: layouts[x] };
+    items.push(id);
+  }
   return {
-    ...columnInlineStyle,
-    color: columnTextColor,
-    backgroundColor: columnBackgroundColor,
-    margin: columnMargin,
-    padding: columnPadding,
+    blocks,
+    blocks_layout: {
+      items,
+    },
   };
 };
 
-export const getGridStyle = (data = {}) => {
-  const gridInlineStyle = isObject(data.grid_inline_style)
-    ? data.grid_inline_style
-    : {};
-  const gridBackgroundColor = data.grid_background_color_active
-    ? data.grid_background_color || 'inherit'
-    : 'inherit';
-  const gridMargin = data.grid_margin ? data.grid_margin : 'unset';
-  const gridPadding = data.grid_padding ? data.grid_padding : 'unset';
-  return {
-    ...gridInlineStyle,
-    backgroundColor: gridBackgroundColor,
-    margin: gridMargin,
-    padding: gridPadding,
-  };
+export const getColumns = (data) => {
+  return (data?.blocks_layout?.items || []).map((id) => [
+    id,
+    data.blocks?.[id],
+  ]);
 };
 
-export const getRowClasses = (data = {}) => {
-  const rowSuper = data.grid_row_super;
-  const rowUiContainer = data.grid_row_fluid ? 'ui container' : '';
-  const rowClassName = data.grid_row_class_name;
-  const rowAlignText = makeSuperClass(
-    `text-align-${data.grid_row_align_text || 'left'}`,
-    rowSuper,
-  );
-  const rowAlignItems = makeSuperClass(
-    `align-items-${data.grid_row_align_items || 'flex-start'}`,
-    rowSuper,
-  );
-  const rowJustifyContent = makeSuperClass(
-    `justify-content-${data.grid_row_justify_content || 'flex-start'}`,
-    rowSuper,
-  );
-  return cx(
-    rowUiContainer,
-    rowClassName,
-    rowAlignText,
-    rowAlignItems,
-    rowJustifyContent,
-  );
+export const getClasses = (classes, container) => {
+  const containerClass = container ? 'ui container' : '';
+  const fullClassesArray = isArray(classes)
+    ? [...classes, containerClass]
+    : [containerClass];
+  return fullClassesArray.join(' ');
 };
 
-export const getRowStyle = (data = {}) => {
-  const rowInlineStyle = isObject(data.grid_row_inline_style)
-    ? data.grid_row_inline_style
-    : {};
-  const rowBackgroundColor = data.grid_row_background_color_active
-    ? data.grid_row_background_color || 'inherit'
-    : 'inherit';
-  const rowMargin = data.grid_row_margin ? data.grid_row_margin : 'unset';
-  const rowPadding = data.grid_row_padding ? data.grid_row_padding : 'unset';
+export const getStyle = (data) => {
+  const {
+    style = {},
+    margin = null,
+    padding = null,
+    backgroundColor = null,
+    textColor = null,
+  } = data;
+  const newStyle = {};
+  if (margin) newStyle.margin = margin;
+  if (padding) newStyle.padding = padding;
+  if (backgroundColor) newStyle.backgroundColor = backgroundColor;
+  if (textColor) newStyle.color = textColor;
   return {
-    ...rowInlineStyle,
-    backgroundColor: rowBackgroundColor,
-    margin: rowMargin,
-    padding: rowPadding,
+    ...newStyle,
+    ...style,
   };
 };

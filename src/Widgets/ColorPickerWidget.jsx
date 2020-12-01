@@ -1,72 +1,88 @@
 import React, { useState } from 'react';
-import { connect } from 'react-redux';
-import { compose } from 'redux';
-import { Checkbox } from 'semantic-ui-react';
-
 import loadable from '@loadable/component';
-const CompactPicker = loadable(() => import('react-color/lib/Compact'));
+import { Checkbox, Grid } from 'semantic-ui-react';
+import cx from 'classnames';
+
+import '@eeacms/volto-grid-block/less/color-picker.less';
+
+const ReactColor = loadable.lib(() => import('react-color'));
 
 const ColorPickerWidget = (props) => {
-  const [active, setActive] = useState(false);
-  const [transparent, setTransparent] = useState(false);
+  const data = props.value || {};
 
   const handleChangeComplete = (color) => {
-    if (transparent) {
-      setTransparent(false);
-    }
-    props.onChange(props.id, color.hex);
+    props.onChange(props.id, { ...data, color: color.hex });
   };
 
   return (
-    <div className="color-picker-widget">
-      <div className="display-flex flex-flow-column">
-        <div className="color-picker-toolbar">
-          <span>{props.title}</span>
-          <Checkbox
-            label={active ? 'ON' : 'OFF'}
-            toggle
-            onChange={(event, data) => {
-              props.onChange(`${props.id}_active`, data.checked);
-              setActive(data.checked);
-            }}
-            checked={active}
-          />
-        </div>{' '}
-        {active ? (
-          <Checkbox
-            className="pt-1 pb-1"
-            label="Transparent"
-            toggle
-            onChange={(event, data) => {
-              if (props.value && data.checked) {
-                props.onChange(props.id, 'transparent');
-              } else if (props.value === 'transparent') {
-                props.onChange(props.id, '#000000');
-              }
-              setTransparent(data.checked);
-            }}
-            checked={transparent}
-          />
+    <div
+      id={`default-${props.id}`}
+      className={cx('inline field color-picker', data.active ? 'active' : '')}
+    >
+      <Grid>
+        <Grid.Row stretched>
+          <Grid.Column width={8}>
+            <div className="wrapper">
+              <p style={{ fontWeight: '500' }}>{props.title}</p>
+            </div>
+          </Grid.Column>
+          <Grid.Column width={4}>
+            <div className="wrapper">
+              <Checkbox
+                label={data.active ? 'ON' : 'OFF'}
+                toggle
+                onChange={(event, newData) => {
+                  props.onChange(props.id, {
+                    ...data,
+                    active: newData.checked,
+                  });
+                }}
+                checked={data.active}
+              />
+            </div>
+          </Grid.Column>
+        </Grid.Row>
+        {data.active ? (
+          <>
+            <Grid.Column width="12">
+              <Checkbox
+                className="pt-1 pb-1"
+                label="Transparent"
+                toggle
+                onChange={(event, newData) => {
+                  props.onChange(props.id, {
+                    ...data,
+                    transparent: newData.checked,
+                    color: newData.checked ? 'transparent' : '#000000',
+                  });
+                }}
+                checked={data.transparent}
+              />
+            </Grid.Column>
+            {data.color !== 'transparent' ? (
+              <Grid.Column width="12">
+                <ReactColor>
+                  {({ CompactPicker }) => {
+                    return (
+                      <CompactPicker
+                        className="color-picker"
+                        color={data.color || '#000'}
+                        onChangeComplete={handleChangeComplete}
+                      ></CompactPicker>
+                    );
+                  }}
+                </ReactColor>
+              </Grid.Column>
+            ) : (
+              ''
+            )}
+          </>
         ) : (
           ''
         )}
-      </div>
-      {active ? (
-        <CompactPicker
-          className="color-picker"
-          color={props.value || '#000'}
-          onChangeComplete={handleChangeComplete}
-        />
-      ) : (
-        ''
-      )}
+      </Grid>
     </div>
   );
 };
 
-export default compose(
-  connect((state, props) => ({
-    pathname: state.router.location.pathname,
-    discodata_query: state.discodata_query,
-  })),
-)(ColorPickerWidget);
+export default ColorPickerWidget;
