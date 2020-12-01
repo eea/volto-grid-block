@@ -32,11 +32,11 @@ export default (config) => {
     id: GRIDBLOCK,
     title: 'Grid block',
     icon: codeSVG,
-    group: 'text',
+    group: 'common',
     view: GridBlockView,
     edit: GridBlockEdit,
     restricted: false,
-    mostUsed: true,
+    mostUsed: false,
     security: {
       addPermission: [],
       view: [],
