@@ -99,6 +99,35 @@
   [data-rbd-draggable-context-id] {
     margin-bottom: 0 !important;
   }
+
+  .grid-column,
+  .grid-column .grid-column-block {
+    &.aligned {
+      &.left {
+        text-align: left;
+
+        .public-DraftEditor-content {
+          text-align: left;
+        }
+      }
+
+      &.center {
+        text-align: center;
+
+        .public-DraftEditor-content {
+          text-align: center;
+        }
+      }
+
+      &.right {
+        text-align: right;
+
+        .public-DraftEditor-content {
+          text-align: right;
+        }
+      }
+    }
+  }
 }
 
 .grid-block-sidebar {

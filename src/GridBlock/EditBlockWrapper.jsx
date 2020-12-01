@@ -152,7 +152,11 @@ class EditBlockWrapper extends React.Component {
           )}
           <div className={cx('ui drag block inner')}>
             <div
-              className={cx(type, getClasses(data.block_class_name))}
+              className={cx(
+                type,
+                'grid-column-block',
+                getClasses(data.block_class_name, false, data.block_text_align),
+              )}
               style={getStyle({
                 style: data.block_css?.style,
                 margin: data.block_margin,

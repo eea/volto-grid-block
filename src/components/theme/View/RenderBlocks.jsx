@@ -34,7 +34,10 @@ const RenderBlocks = (props) => {
         return Block !== null ? (
           <div
             key={block}
-            className={cx(getClasses(data.block_class_name))}
+            className={cx(
+              'grid-column-block',
+              getClasses(data.block_class_name, false, data.block_text_align),
+            )}
             style={getStyle({
               style: data.block_css?.style,
               margin: data.block_margin,
