@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import loadable from '@loadable/component';
 import { Checkbox, Grid } from 'semantic-ui-react';
 import cx from 'classnames';
