@@ -32,7 +32,6 @@ const View = (props) => {
             ? data.grid_text_color.color
             : null,
         })}
-        stackable
       >
         <Grid.Row
           className={cx(
@@ -66,22 +65,33 @@ const View = (props) => {
                   false,
                 ),
               )}
+              textAlign={column.column_text_align}
               style={getStyle({
                 style: column.column_css?.style,
                 margin: column.column_margin,
                 padding: column.column_padding,
-                backgroundColor: column.column_background_color?.active
-                  ? column.column_background_color.color
-                  : null,
+                backgroundColor: null,
                 textColor: column.column_text_color?.active
                   ? column.column_text_color.color
                   : null,
               })}
-              textAlign={column.column_text_align}
               key={columnId}
               {...column.column_layout}
             >
-              <RenderBlocks {...props} metadata={metadata} content={column} />
+              <div
+                className={cx('grid-column-wrapper')}
+                style={getStyle({
+                  style: {},
+                  margin: null,
+                  padding: null,
+                  backgroundColor: column.column_background_color?.active
+                    ? column.column_background_color.color
+                    : null,
+                  textColor: null,
+                })}
+              >
+                <RenderBlocks {...props} metadata={metadata} content={column} />
+              </div>
             </Grid.Column>
           ))}
         </Grid.Row>
