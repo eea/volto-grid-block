@@ -8,7 +8,6 @@ import InlineForm from '@plone/volto/components/manage/Form/InlineForm';
 import { DragDropList } from '@eeacms/volto-blocks-form/components';
 import { emptyBlocksForm } from '@eeacms/volto-blocks-form/helpers';
 import { getColumns } from '@eeacms/volto-grid-block/helpers';
-import { even_columns } from '@eeacms/volto-grid-block/grid';
 import cx from 'classnames';
 
 import { ColumnLayoutSchema } from './schema';
@@ -31,22 +30,19 @@ export function moveColumn(formData, source, destination) {
 }
 
 const empty = () => {
-  return [uuid(), emptyBlocksForm()];
-};
-
-const blocksWithColumnLayout = (blocks, blocks_layout) => {
-  const { items = [] } = blocks_layout;
-  const newBlocks = { ...blocks };
-  items.forEach((columnId, index) => {
-    newBlocks[columnId].column_layout = {
-      mobile: 12,
-      tablet: even_columns[items.length - 1][index],
-      computer: even_columns[items.length - 1][index],
-      largeScreen: even_columns[items.length - 1][index],
-      widescreen: even_columns[items.length - 1][index],
-    };
-  });
-  return newBlocks;
+  return [
+    uuid(),
+    {
+      ...emptyBlocksForm(),
+      column_layout: {
+        mobile: 12,
+        tablet: 12,
+        computer: 12,
+        largeScreen: 12,
+        widescreen: 12,
+      },
+    },
+  ];
 };
 
 const ColumnLayoutWidget = (props) => {
@@ -71,21 +67,13 @@ const ColumnLayoutWidget = (props) => {
                     title="Add column"
                     onClick={() => {
                       const [newId, newData] = empty(columnsList);
-                      const newBlocks = {
-                        ...value.blocks,
-                        [newId]: newData,
-                      };
-                      const newBlocksLayout = {
-                        ...value.blocks_layout,
-                        items: [...value.blocks_layout?.items, newId],
-                      };
                       onChange(id, {
                         ...value,
-                        blocks: blocksWithColumnLayout(
-                          newBlocks,
-                          newBlocksLayout,
-                        ),
-                        blocks_layout: newBlocksLayout,
+                        blocks: { ...value.blocks, [newId]: newData },
+                        blocks_layout: {
+                          ...value.blocks_layout,
+                          items: [...value.blocks_layout?.items, newId],
+                        },
                       });
                     }}
                   >
@@ -160,23 +148,16 @@ const ColumnLayoutWidget = (props) => {
                               basic
                               title="Remove column"
                               onClick={() => {
-                                const newBlocks = omit({ ...value.blocks }, [
-                                  childId,
-                                ]);
-                                const newBlocksLayout = {
-                                  ...value.blocks_layout,
-                                  items: without(
-                                    [...value.blocks_layout?.items],
-                                    childId,
-                                  ),
-                                };
                                 const newFormData = {
                                   ...value,
-                                  blocks: blocksWithColumnLayout(
-                                    newBlocks,
-                                    newBlocksLayout,
-                                  ),
-                                  blocks_layout: newBlocksLayout,
+                                  blocks: omit({ ...value.blocks }, [childId]),
+                                  blocks_layout: {
+                                    ...value.blocks_layout,
+                                    items: without(
+                                      [...value.blocks_layout?.items],
+                                      childId,
+                                    ),
+                                  },
                                 };
                                 onChange(id, newFormData);
                               }}
@@ -231,8 +212,6 @@ const ColumnLayoutWidget = (props) => {
               Apply columns template
             </Button>
             <p className="info">
-              Adding/deleting columns will <b>reset</b> the columns layout.{' '}
-              <br />
               Using a columns template will <b>reset</b> all the data from the
               columns.
             </p>

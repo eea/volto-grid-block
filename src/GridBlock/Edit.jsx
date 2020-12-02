@@ -230,7 +230,6 @@ class Edit extends React.Component {
                 ? data.grid_text_color.color
                 : null,
             })}
-            stackable
           >
             <Grid.Row
               className={cx(
@@ -263,93 +262,104 @@ class Edit extends React.Component {
                       false,
                     ),
                   )}
+                  textAlign={column.column_text_align}
                   style={getStyle({
                     style: column.column_css?.style,
                     margin: column.column_margin,
                     padding: column.column_padding,
-                    backgroundColor: column.column_background_color?.active
-                      ? column.column_background_color.color
-                      : null,
+                    backgroundColor: null,
                     textColor: column.column_text_color?.active
                       ? column.column_text_color.color
                       : null,
                   })}
-                  textAlign={column.column_text_align}
                   key={columnId}
                   {...column.column_layout}
                 >
-                  <BlocksForm
-                    key={columnId}
-                    metadata={metadata}
-                    properties={isEmpty(column) ? emptyBlocksForm() : column}
-                    selectedBlock={
-                      selected ? this.state.colSelections[columnId] : null
-                    }
-                    onSelectBlock={(blockId) => {
-                      this.setState(
-                        {
-                          colSelections: {
-                            [columnId]: blockId,
-                          },
-                          activeColumn: null,
-                          activeBlock: null,
-                        },
-                        () => {
-                          this.props.setSidebarTab(1);
-                        },
-                      );
-                    }}
-                    onChangeFormData={(newFormData) => {
-                      onChangeBlock(block, {
-                        ...data,
-                        data: {
-                          ...columnsData,
-                          blocks: {
-                            ...columnsData.blocks,
-                            [columnId]: newFormData,
-                          },
-                        },
-                      });
-                    }}
-                    onChangeField={(id, value) => {
-                      // this.onChangeColumnData(id, value, columnId)
-                    }}
-                    pathname={pathname}
+                  <div
+                    className={cx('grid-column-wrapper')}
+                    style={getStyle({
+                      style: {},
+                      margin: null,
+                      padding: null,
+                      backgroundColor: column.column_background_color?.active
+                        ? column.column_background_color.color
+                        : null,
+                      textColor: null,
+                    })}
                   >
-                    {({ draginfo }, editBlock, blockProps) => (
-                      <EditBlockWrapper
-                        draginfo={draginfo}
-                        blockProps={{
-                          ...blockProps,
-                          latest:
-                            column.blocks_layout.items.indexOf(
-                              blockProps.block,
-                            ) ===
-                            column.blocks_layout.items.length - 1,
-                        }}
-                        extraControls={
-                          <>
-                            <Button
-                              icon
-                              basic
-                              title="Edit column"
-                              onClick={() => {
-                                this.setState({
-                                  activeColumn: columnId,
-                                  activeBlock: blockProps.block,
-                                });
-                                this.props.setSidebarTab(1);
-                              }}
-                            >
-                              <Icon name={tuneSVG} size="19px" />
-                            </Button>
-                          </>
-                        }
-                      >
-                        {editBlock}
-                      </EditBlockWrapper>
-                    )}
-                  </BlocksForm>
+                    <BlocksForm
+                      key={columnId}
+                      metadata={metadata}
+                      properties={isEmpty(column) ? emptyBlocksForm() : column}
+                      selectedBlock={
+                        selected ? this.state.colSelections[columnId] : null
+                      }
+                      onSelectBlock={(blockId) => {
+                        this.setState(
+                          {
+                            colSelections: {
+                              [columnId]: blockId,
+                            },
+                            activeColumn: null,
+                            activeBlock: null,
+                          },
+                          () => {
+                            this.props.setSidebarTab(1);
+                          },
+                        );
+                      }}
+                      onChangeFormData={(newFormData) => {
+                        onChangeBlock(block, {
+                          ...data,
+                          data: {
+                            ...columnsData,
+                            blocks: {
+                              ...columnsData.blocks,
+                              [columnId]: newFormData,
+                            },
+                          },
+                        });
+                      }}
+                      onChangeField={(id, value) => {
+                        // this.onChangeColumnData(id, value, columnId)
+                      }}
+                      pathname={pathname}
+                    >
+                      {({ draginfo }, editBlock, blockProps) => (
+                        <EditBlockWrapper
+                          draginfo={draginfo}
+                          blockProps={{
+                            ...blockProps,
+                            latest:
+                              column.blocks_layout.items.indexOf(
+                                blockProps.block,
+                              ) ===
+                              column.blocks_layout.items.length - 1,
+                          }}
+                          extraControls={
+                            <>
+                              <Button
+                                icon
+                                basic
+                                title="Edit column"
+                                onClick={() => {
+                                  this.setState({
+                                    activeColumn: columnId,
+                                    activeBlock: blockProps.block,
+                                  });
+                                  this.props.setSidebarTab(1);
+                                }}
+                              >
+                                <Icon name={tuneSVG} size="19px" />
+                              </Button>
+                            </>
+                          }
+                        >
+                          {editBlock}
+                        </EditBlockWrapper>
+                      )}
+                    </BlocksForm>
+                  </div>
                 </Grid.Column>
               ))}
             </Grid.Row>
