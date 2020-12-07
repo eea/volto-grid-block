@@ -5,6 +5,8 @@
 
 This addon enables grid layout grouping of Volto blocks. It introduces a "grid block" which can be used, from the Edit form, to group other blocks. It uses a flex based layout with column css classes. Ex. 'xs-12 sm-6 md-4 lg-3'
 
+[![Volto Grid Block Demo Video](https://img.youtube.com/vi/yO16BJBEBcw/0.jpg)](https://www.youtube.com/watch?v=yO16BJBEBcw)
+
 ## Getting started
 
 1. Create new volto project if you don't already have one:
