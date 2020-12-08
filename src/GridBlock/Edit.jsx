@@ -12,6 +12,7 @@ import {
   getClasses,
   getStyle,
 } from '@eeacms/volto-grid-block/helpers';
+import { numberToWord } from '@eeacms/volto-grid-block/grid';
 import { isEmpty } from 'lodash';
 import cx from 'classnames';
 import { Grid, Segment, Button } from 'semantic-ui-react';
@@ -256,6 +257,7 @@ class Edit extends React.Component {
                 <Grid.Column
                   className={cx(
                     'grid-column',
+                    `${numberToWord[column.column_layout.small]} wide small`,
                     getClasses(
                       column.column_class_name,
                       column.column_ui_container || false,
@@ -273,7 +275,11 @@ class Edit extends React.Component {
                       : null,
                   })}
                   key={columnId}
-                  {...column.column_layout}
+                  mobile={column.column_layout.mobile}
+                  tablet={column.column_layout.tablet}
+                  computer={column.column_layout.computer}
+                  largeScreen={column.column_layout.largeScreen}
+                  widescreen={column.column_layout.widescreen}
                 >
                   <div
                     className={cx('grid-column-wrapper')}
@@ -341,7 +347,7 @@ class Edit extends React.Component {
                               <Button
                                 icon
                                 basic
-                                title="Edit column"
+                                title="Edit block style"
                                 onClick={() => {
                                   this.setState({
                                     activeColumn: columnId,

@@ -4,7 +4,7 @@ export const GridBlockSchema = () => ({
     {
       id: 'default',
       title: 'Default',
-      fields: ['grid_size', 'data'],
+      fields: ['data'],
     },
     {
       id: 'advanced_grid',

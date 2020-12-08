@@ -5,6 +5,7 @@ import {
   getClasses,
   getStyle,
 } from '@eeacms/volto-grid-block/helpers';
+import { numberToWord } from '@eeacms/volto-grid-block/grid';
 import cx from 'classnames';
 import { Grid } from 'semantic-ui-react';
 
@@ -59,6 +60,7 @@ const View = (props) => {
             <Grid.Column
               className={cx(
                 'grid-column',
+                `${numberToWord[column.column_layout.small]} wide small`,
                 getClasses(
                   column.column_class_name,
                   column.column_ui_container || false,
@@ -76,7 +78,11 @@ const View = (props) => {
                   : null,
               })}
               key={columnId}
-              {...column.column_layout}
+              mobile={column.column_layout.mobile}
+              tablet={column.column_layout.tablet}
+              computer={column.column_layout.computer}
+              largeScreen={column.column_layout.largeScreen}
+              widescreen={column.column_layout.widescreen}
             >
               <div
                 className={cx('grid-column-wrapper')}

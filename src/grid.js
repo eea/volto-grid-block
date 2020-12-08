@@ -8,6 +8,7 @@ import iconG from '@eeacms/volto-grid-block/icons/full-column.svg';
 
 export const gridSizes = {
   full: {
+    small: 12,
     mobile: 12,
     tablet: 12,
     computer: 12,
@@ -15,6 +16,7 @@ export const gridSizes = {
     widescreen: 12,
   },
   halfWidth: {
+    small: 12,
     mobile: 12,
     tablet: 6,
     computer: 6,
@@ -22,6 +24,7 @@ export const gridSizes = {
     widescreen: 6,
   },
   twoThirds: {
+    small: 12,
     mobile: 12,
     tablet: 8,
     computer: 8,
@@ -29,6 +32,7 @@ export const gridSizes = {
     widescreen: 8,
   },
   oneThird: {
+    small: 12,
     mobile: 12,
     tablet: 4,
     computer: 4,
@@ -36,6 +40,7 @@ export const gridSizes = {
     widescreen: 4,
   },
   halfWidthBig: {
+    small: 12,
     mobile: 12,
     tablet: 8,
     computer: 6,
@@ -43,6 +48,7 @@ export const gridSizes = {
     widescreen: 6,
   },
   oneThirdSmall: {
+    small: 12,
     mobile: 12,
     tablet: 2,
     computer: 3,
@@ -50,6 +56,7 @@ export const gridSizes = {
     widescreen: 3,
   },
   oneQuarter: {
+    small: 12,
     mobile: 12,
     tablet: 6,
     computer: 3,
@@ -57,6 +64,7 @@ export const gridSizes = {
     widescreen: 3,
   },
   oneFifth: {
+    small: 12,
     mobile: 12,
     tablet: 2,
     computer: 3,
@@ -64,6 +72,7 @@ export const gridSizes = {
     widescreen: 3,
   },
   fourFifths: {
+    small: 12,
     mobile: 12,
     tablet: 10,
     computer: 9,
@@ -155,3 +164,18 @@ export const variants = [
     title: '100',
   },
 ];
+
+export const numberToWord = {
+  1: 'one',
+  2: 'two',
+  3: 'three',
+  4: 'four',
+  5: 'five',
+  6: 'six',
+  7: 'seven',
+  8: 'eight',
+  9: 'nine',
+  10: 'ten',
+  11: 'eleven',
+  12: 'twelve',
+};

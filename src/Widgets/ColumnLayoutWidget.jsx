@@ -35,6 +35,7 @@ const empty = () => {
     {
       ...emptyBlocksForm(),
       column_layout: {
+        small: 12,
         mobile: 12,
         tablet: 12,
         computer: 12,

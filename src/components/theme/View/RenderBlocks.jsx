@@ -61,7 +61,7 @@ const RenderBlocks = (props) => {
           </div>
         ) : (
           <div key={block}>
-            {intl.formatMessage(messages.unknownBlock, {
+            {intl?.formatMessage(messages.unknownBlock, {
               block: content[blocksFieldname]?.[block]?.['@type'],
             })}
           </div>

@@ -4,10 +4,25 @@ export const ColumnLayoutSchema = () => ({
     {
       id: 'default',
       title: 'Default',
-      fields: ['mobile', 'tablet', 'computer', 'largeScreen', 'widescreen'],
+      fields: [
+        'small',
+        'mobile',
+        'tablet',
+        'computer',
+        'largeScreen',
+        'widescreen',
+      ],
     },
   ],
   properties: {
+    small: {
+      title: 'Small screen size',
+      type: 'number',
+      minimum: 1,
+      maximum: 12,
+      onBlur: () => null,
+      onClick: () => null,
+    },
     mobile: {
       title: 'Mobile size',
       type: 'number',

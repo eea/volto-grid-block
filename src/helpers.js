@@ -37,7 +37,7 @@ export const empty = (count, layouts) => {
   const items = [];
   for (let x = 0; x < count; x++) {
     const id = uuid();
-    blocks[id] = { ...emptyBlocksForm(), column_layout: layouts[x] };
+    blocks[id] = { ...emptyBlocksForm(), column_layout: { ...layouts[x] } };
     items.push(id);
   }
   return {
