@@ -38,6 +38,7 @@ class Edit extends React.Component {
     this.handleClickOutside = this.handleClickOutside.bind(this);
     this.onChangeColumnField = this.onChangeColumnField.bind(this);
     this.onChangeBlockField = this.onChangeBlockField.bind(this);
+    this.onChangeColumnData = this.onChangeColumnData.bind(this);
     this.copyData = this.copyData.bind(this);
     this.pasteData = this.pasteData.bind(this);
     this.state = {
@@ -47,6 +48,7 @@ class Edit extends React.Component {
       preview: false,
     };
     this.gridBlockContainer = React.createRef();
+    this.blocksState = {};
   }
 
   handleClickOutside(event) {
@@ -125,6 +127,30 @@ class Edit extends React.Component {
         },
       },
     });
+  };
+
+  onChangeColumnData = (id, value, columnId) => {
+    const { data, onChangeBlock, block, onChangeField } = this.props;
+    const coldata = data.data;
+    // special handling of blocks and blocks_layout
+    if (['blocks', 'blocks_layout'].indexOf(id) > -1) {
+      this.blocksState[id] = value;
+      onChangeBlock(block, {
+        ...data,
+        data: {
+          ...coldata,
+          blocks: {
+            ...coldata.blocks,
+            [columnId]: {
+              ...coldata.blocks?.[columnId],
+              ...this.blocksState,
+            },
+          },
+        },
+      });
+    } else {
+      onChangeField(id, value);
+    }
   };
 
   onChangeBlockField = (id, value, columnId, blockId) => {
@@ -327,7 +353,7 @@ class Edit extends React.Component {
                         });
                       }}
                       onChangeField={(id, value) => {
-                        // this.onChangeColumnData(id, value, columnId)
+                        this.onChangeColumnData(id, value, columnId);
                       }}
                       pathname={pathname}
                     >
