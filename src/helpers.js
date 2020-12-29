@@ -64,6 +64,12 @@ export const getColumnStyle = (block = {}) => {
   };
 };
 
+export const getGridClasses = (data = {}) => {
+  const gridUiContainer = data.grid_fluid ? 'ui container' : '';
+  const gridClassName = data.grid_class_name;
+  return cx(gridUiContainer, gridClassName);
+};
+
 export const getGridStyle = (data = {}) => {
   const gridInlineStyle = isObject(data.grid_inline_style)
     ? data.grid_inline_style

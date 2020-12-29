@@ -4,6 +4,7 @@ import { blocks } from '~/config';
 import {
   getColumnStyle,
   getColumnClasses,
+  getGridClasses,
   getGridStyle,
   getRowClasses,
   getRowStyle,
@@ -33,7 +34,7 @@ const GridBlockView = (props) => {
   } = props.data;
   return (
     <div
-      className={cx('grid-layout', props.data.grid_fluid ? 'ui container' : '')}
+      className={cx('grid-layout', getGridClasses(props.data))}
       style={{ ...(getGridStyle(props.data) || {}) }}
     >
       <div
