@@ -16,7 +16,7 @@ import { numberToWord } from '@eeacms/volto-grid-block/grid';
 import { isEmpty } from 'lodash';
 import cx from 'classnames';
 import { Grid, Segment, Button } from 'semantic-ui-react';
-import { blocks, settings } from '~/config';
+import config from '@plone/volto/registry';
 import ColumnVariations from './ColumnVariations';
 import EditBlockWrapper from './EditBlockWrapper';
 import View from './View';
@@ -218,7 +218,7 @@ class Edit extends React.Component {
           ]
         : {};
 
-    const { variants } = blocks.blocksConfig[GRIDBLOCK];
+    const { variants } = config.blocks.blocksConfig[GRIDBLOCK];
 
     return (
       <div
@@ -414,7 +414,7 @@ class Edit extends React.Component {
                     onClick={() => {
                       this.setState({ preview: !this.state.preview });
                       onAddBlock(
-                        settings.defaultBlockType,
+                        config.settings.defaultBlockType,
                         this.props.index + 1,
                       );
                     }}
