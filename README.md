@@ -27,7 +27,7 @@ This addon enables grid layout grouping of Volto blocks. It introduces a "grid b
    ],
 
    "dependencies": {
-       "@eeacms/volto-grid-block": "^1.0.0"
+       "@eeacms/volto-grid-block": "^2.0.0"
    }
    ```
 
