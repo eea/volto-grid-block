@@ -1,7 +1,9 @@
-# volto-grid-block
+# (deprecated) volto-grid-block
 [![Releases](https://img.shields.io/github/v/release/eea/volto-grid-block)](https://github.com/eea/volto-grid-block/releases)
 [![Pipeline](https://ci.eionet.europa.eu/buildStatus/icon?job=volto-addons%2Fvolto-grid-block%2Fmaster&subject=master)](https://ci.eionet.europa.eu/view/Github/job/volto-addons/job/volto-grid-block/job/master/display/redirect)
 [![Pipeline](https://ci.eionet.europa.eu/buildStatus/icon?job=volto-addons%2Fvolto-grid-block%2Fdevelop&subject=develop)](https://ci.eionet.europa.eu/view/Github/job/volto-addons/job/volto-grid-block/job/develop/display/redirect)
+
+!IMPORTANT: use https://github.com/eea/volto-columns-block and https://github.com/eea/volto-block-style instead of grid-block
 
 This addon enables grid layout grouping of Volto blocks. It introduces a "grid block" which can be used, from the Edit form, to group other blocks. It uses a flex based layout with column css classes. Ex. 'xs-12 sm-6 md-4 lg-3'
 
