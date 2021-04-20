@@ -8,44 +8,48 @@
 
 .grid-layout-deprecated {
   display: flex;
-  flex-flow: row wrap;
-  justify-content: inherit;
-  align-items: flex-start;
   width: 100% !important;
+  flex-flow: row wrap;
+  align-items: flex-start;
+  justify-content: inherit;
   padding: 0rem;
 
   .grid-block {
-    border: 1px dashed #EC776A;
     padding: 1em;
+    border: 1px dashed #ec776a;
   }
 
   .row {
-    display: flex;
-    flex-flow: row wrap;
-    justify-content: inherit;
-    align-items: flex-start;
-    width: 100%;
-    text-align: left;
     position: relative;
+    display: flex;
+    width: 100%;
+    flex-flow: row wrap;
+    align-items: flex-start;
+    justify-content: inherit;
     margin-top: 1.5rem;
+    text-align: left;
+
     &.edit {
-      border: 1px dashed #4296B3;
       padding: 1em;
+      border: 1px dashed #4296b3;
     }
   }
 
   .block-edit-wrapper {
+    position: relative;
     height: 100%;
     min-height: 60px;
-    position: relative;
+    border: 1px solid #c7d5d8;
     background: transparent !important;
-    box-shadow: 0px 1px 2px 0 #C7D5D8;
     border-radius: 0;
-    border: 1px solid #C7D5D8;
+    box-shadow: 0px 1px 2px 0 #c7d5d8;
+
     .block-edit-control {
       text-align: center;
+
       .icon {
         cursor: pointer;
+
         &:hover {
           opacity: 0.9;
         }
@@ -54,6 +58,7 @@
 
     .block.image {
       height: 80% !important;
+
       > img {
         height: 100% !important;
       }
@@ -61,14 +66,16 @@
   }
 
   .block-edit-toolbar {
-    background: #4296B3;
-    padding: 4px;
     display: flex;
-    justify-content: space-between;
-    align-items: center;
     flex-flow: row;
+    align-items: center;
+    justify-content: space-between;
+    padding: 4px;
+    background: #4296b3;
+
     .icon {
       cursor: pointer;
+
       &:hover {
         opacity: 0.9;
       }
@@ -80,15 +87,20 @@
       margin-bottom: 0;
     }
   }
+
   &:not(.edit) {
     .block.image {
       height: 100%;
+
       .scene {
         height: 80%;
+
         .card {
           height: 100%;
+
           .card__face {
             height: 100%;
+
             img {
               height: 100% !important;
             }
@@ -103,25 +115,34 @@
 @display-position: relative, absolute, static, none;
 @align-items: stretch, center, flex-start, flex-end, baseline, initial, inherit;
 @flex-flow: row, column;
-@justify-content: flex-start, flex-end, center, space-between, space-around, initial, inherit;
+@justify-content: flex-start, flex-end, center, space-between, space-around,
+  initial, inherit;
 @text-align: left, right, center, justify, initial, inherit;
 @text-decoration: underline, overline, line-through;
 @range: 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12;
 @position: {
   top: t;
+  right: r;
   bottom: b;
   left: l;
-  right: r;
   default: a;
-}
+};
 
 .makeProperty(@property, @value, @super) when (@super) {
-  @procesedValue: if(isnumber(@value) and @value > 0 and not(ispercentage(@value)), e(%('%srem', @value)), @value);
+  @procesedValue: if(
+    isnumber(@value) and @value > 0 and not(ispercentage(@value)),
+    e(%('%srem', @value)),
+    @value
+  );
   @{property}: @procesedValue !important;
 }
 
 .makeProperty(@property, @value, @super) when (not(@super)) {
-  @procesedValue: if(isnumber(@value) and @value > 0 and not(ispercentage(@value)), e(%('%srem', @value)), @value);
+  @procesedValue: if(
+    isnumber(@value) and @value > 0 and not(ispercentage(@value)),
+    e(%('%srem', @value)),
+    @value
+  );
   @{property}: @procesedValue;
 }
 
@@ -130,7 +151,7 @@
     .@{class}-@{value}-super {
       .makeProperty(@property, @value, @super);
     }
-  })
+  });
 }
 
 .makeClassByArray(@array, @property, @class, @super) when (not(@super)) {
@@ -138,14 +159,14 @@
     .@{class}-@{value} {
       .makeProperty(@property, @value, @super);
     }
-  })
+  });
 }
 
 .makeClassByObject(@object, @values, @property, @class, @super) {
   each(@object, {
     @objectKey: if(@key = default, '', e(%('-%s', @key)));
     .makeClassByArray(@range, e(%('%s%s', @property, @objectKey)), e(%('%s%s', @class, @value)), @super );
-  })
+  });
 }
 
 .makeClassByObject(@position, @range, margin, m, false);
@@ -175,7 +196,7 @@
       @procesedValue: 100% / (12 / @value);
       .makeProperty(width,  @procesedValue, @super);
     }
-  })
+  });
 }
 
 [class*='desktop-'],
@@ -250,16 +271,18 @@
     display: flex;
     flex-flow: column;
     flex-wrap: wrap;
+
     .description-item {
-      margin: 1rem 0;
       display: flex;
       flex-flow: column;
       align-items: flex-start;
+      margin: 1rem 0;
     }
+
     .column-layout-grid {
       display: grid;
-      grid-template-columns: repeat(2, 1fr);
       grid-gap: 1em;
+      grid-template-columns: repeat(2, 1fr);
     }
   }
 }
@@ -267,15 +290,17 @@
 .block-chooser-container {
   position: relative;
   display: none;
+
   &.active {
     display: block;
   }
+
   .blocks-chooser {
     position: relative;
     top: 0 !important;
-    left: 0 !important;
     right: unset !important;
     bottom: unset !important;
+    left: 0 !important;
   }
 }
 
@@ -286,68 +311,73 @@
 }
 
 .block-list-widget-control {
-  background: #4296B3;
-  color: #fff;
+  display: flex;
+  justify-content: space-between;
   padding: 4px;
   margin-top: 2px !important;
   margin-bottom: 2px !important;
+  background: #4296b3;
+  border-radius: 4px;
+  color: #fff;
+
   &.fullcontrol {
-    margin-bottom: 0!important;
+    margin-bottom: 0 !important;
     border-bottom-left-radius: 0;
     border-bottom-right-radius: 0;
   }
-  display: flex;
-  border-radius: 4px;
-  justify-content: space-between;
+
   .control {
-    align-items: center;
     display: flex;
+    align-items: center;
   }
 }
 
 .color-picker-widget {
   display: flex;
-  padding: 1em;
   flex-flow: column;
+  padding: 1em;
 }
 
 .color-picker-label {
   margin-bottom: 1em;
 }
 
-
 .grid-layout {
   display: flex;
-  flex-flow: row wrap;
-  justify-content: inherit;
-  align-items: flex-start;
   width: 100% !important;
+  flex-flow: row wrap;
+  align-items: flex-start;
+  justify-content: inherit;
   padding: 0rem;
 
   .block .block:not(.inner)::before {
-    pointer-events: none;
     z-index: 0;
+    pointer-events: none;
   }
+
   .block {
-    margin-bottom: 0;
     height: 100%;
+    margin-bottom: 0;
+
     &.selected {
       margin-bottom: 0;
     }
   }
 
   .row {
-    display: flex;
-    flex-flow: row wrap;
-    justify-content: inherit;
-    align-items: flex-start;
-    width: 100%;
-    text-align: left;
     position: relative;
+    display: flex;
+    width: 100%;
+    flex-flow: row wrap;
+    align-items: flex-start;
+    justify-content: inherit;
+    text-align: left;
+
     &.ui.container {
-      display: flex!important;
-      flex-flow: row wrap!important;
+      display: flex !important;
+      flex-flow: row wrap !important;
     }
+
     &.edit {
       // border: 1px dashed #4296B3;
       padding: 1em;
@@ -358,10 +388,10 @@
     left: -10px;
   }
 
-
   .block.image {
-    margin-bottom: 0;
     height: 100% !important;
+    margin-bottom: 0;
+
     > img {
       height: 100% !important;
     }
@@ -369,11 +399,14 @@
 
   .column {
     position: relative;
+
     &[data-rbd-draggable-context-id] {
       margin-bottom: 0;
     }
+
     &.edit {
       padding: 1.5em 2em;
+
       &.default-block-type.empty {
         padding-left: 3.3em;
       }
@@ -383,23 +416,27 @@
   &:not(.edit) {
     .block.image {
       height: 100%;
+
       .scene {
         height: 80%;
+
         .card {
           height: 100%;
+
           .card__face {
             height: 100%;
+
             img {
               height: 100% !important;
-              margin-left: 0 !important;
               margin-right: 0 !important;
+              margin-left: 0 !important;
             }
           }
         }
       }
     }
   }
-  
+
   .drag.handle.star.wrapper {
     top: 20px;
     cursor: pointer;
@@ -417,21 +454,29 @@
   }
 
   .overwrite-color {
-    h1, h2, h3, h4, h5, p {
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    p {
       color: inherit !important;
     }
   }
 }
+
 .color-picker-widget {
   .color-picker-toolbar {
     display: flex;
     flex-flow: row;
     justify-content: space-between;
-    background: #808080;
-    color: #fff;
-    border-radius: 4px;
     padding: 6px;
-    .ui.toggle.checkbox .box, .ui.toggle.checkbox label,
+    background: #808080;
+    border-radius: 4px;
+    color: #fff;
+
+    .ui.toggle.checkbox .box,
+    .ui.toggle.checkbox label,
     .ui.toggle.checkbox input:checked ~ .box,
     .ui.toggle.checkbox input:checked ~ label {
       color: #fff !important;

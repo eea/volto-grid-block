@@ -1,6 +1,6 @@
 import React from 'react';
 import cx from 'classnames';
-import { blocks } from '~/config';
+import config from '@plone/volto/registry';
 import {
   getColumnStyle,
   getColumnClasses,
@@ -13,6 +13,7 @@ import {
 import '../less/gridLayout.less';
 
 const Tile = React.memo((props) => {
+  const { blocks } = config;
   const { block, id } = props;
   let Block = null;
   let type = block['@type'];
@@ -28,7 +29,7 @@ const Tile = React.memo((props) => {
   ) : null;
 });
 
-const GridBlockView = (props) => {
+const View = (props) => {
   const {
     blocksData = { blocks: {}, blocks_layout: { items: [] } },
   } = props.data;
@@ -81,4 +82,4 @@ const GridBlockView = (props) => {
     </div>
   );
 };
-export default GridBlockView;
+export default View;

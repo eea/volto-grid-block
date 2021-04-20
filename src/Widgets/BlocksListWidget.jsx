@@ -4,7 +4,7 @@ import { compose } from 'redux';
 import { v4 as uuid } from 'uuid';
 import { BlockChooser } from '@plone/volto/components';
 import cx from 'classnames';
-import { reorder } from '../GridBlockDeprecated/utils';
+import { reorder } from '../helpers';
 
 import { DragDropContext, Droppable } from 'react-beautiful-dnd';
 
@@ -24,7 +24,7 @@ const BlocksListWidget = (props) => {
   useEffect(() => {
     setBlocksData(props.value);
     /* eslint-disable-next-line */
-  }, [props.value])
+  }, [props.value]);
 
   const onAddBlock = (current, incoming) => {
     const blockId = uuid();

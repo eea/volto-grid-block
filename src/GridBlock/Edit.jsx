@@ -1,4 +1,6 @@
 import React from 'react';
+import { compose } from 'redux';
+import { connect } from 'react-redux';
 import { Icon } from '@plone/volto/components';
 import InlineForm from '@plone/volto/components/manage/Form/InlineForm';
 import { SidebarPortal } from '@plone/volto/components';
@@ -11,7 +13,7 @@ import { v4 as uuid } from 'uuid';
 import dragSVG from '@plone/volto/icons/drag.svg';
 import neutralSVG from '@plone/volto/icons/neutral.svg';
 import delightedSVG from '@plone/volto/icons/delighted.svg';
-import { settings } from '~/config';
+import config from '@plone/volto/registry';
 import EditBlock from '../components/manage/Blocks/Block/Edit';
 import {
   getColumnClasses,
@@ -22,7 +24,7 @@ import {
 import '../less/gridLayout.less';
 import { GRIDBLOCK } from '../constants';
 
-class GridBlockEdit extends React.Component {
+class Edit extends React.Component {
   constructor(props) {
     super(props);
 
@@ -56,6 +58,7 @@ class GridBlockEdit extends React.Component {
   }
 
   getInitialState() {
+    const { settings } = config;
     const idTrailingBlock = uuid();
     const blocksData = isEmpty(this.props.data.blocksData?.blocks)
       ? {
@@ -282,6 +285,7 @@ class GridBlockEdit extends React.Component {
       disableBackspace = false,
     } = {},
   ) {
+    const { settings } = config;
     if (e.key === 'ArrowUp' && !disableArrowUp) {
       this.onFocusPreviousBlock(block);
       e.preventDefault();
@@ -387,6 +391,7 @@ class GridBlockEdit extends React.Component {
   }
 
   onMutateBlock(current, incoming) {
+    const { settings } = config;
     const idTrailingBlock = uuid();
     const blocksData = { ...(this.props.data.blocksData || {}) };
     const newBlocksLayoutItems = [
@@ -509,10 +514,12 @@ class GridBlockEdit extends React.Component {
   }
 
   render() {
+    const { settings } = config;
     const blocks = this.props.data.blocksData?.blocks || {};
     const blocks_layout = this.props.data.blocksData?.blocks_layout || {
       items: [],
     };
+
     return (
       <div
         role="presentation"
@@ -702,4 +709,4 @@ class GridBlockEdit extends React.Component {
   }
 }
 
-export default GridBlockEdit;
+export default compose(connect(null, {}))(Edit);

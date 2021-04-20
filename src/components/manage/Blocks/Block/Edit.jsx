@@ -8,7 +8,7 @@ import PropTypes from 'prop-types';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { defineMessages, injectIntl } from 'react-intl';
-import { blocks } from '~/config';
+import config from '@plone/volto/registry';
 import { Button } from 'semantic-ui-react';
 import includes from 'lodash/includes';
 import isBoolean from 'lodash/isBoolean';
@@ -23,7 +23,7 @@ import {
   BlockSettingsSidebar,
   BlockSettingsSchema,
 } from '@plone/volto/components';
-import { getColumnStyle, getColumnClasses } from '../../../../helpers';
+import { getColumnStyle } from '../../../../helpers';
 
 const messages = defineMessages({
   unknownBlock: {
@@ -70,6 +70,7 @@ class Edit extends Component {
   };
 
   componentDidMount() {
+    const { blocks } = config;
     const { type } = this.props;
     const blockHasOwnFocusManagement =
       blocks.blocksConfig?.[type]?.['blockHasOwnFocusManagement'] || null;
@@ -89,6 +90,7 @@ class Edit extends Component {
   }
 
   UNSAFE_componentWillReceiveProps(nextProps) {
+    const { blocks } = config;
     const { selected, type } = this.props;
     const blockHasOwnFocusManagement =
       blocks.blocksConfig?.[type]?.['blockHasOwnFocusManagement'] || null;
@@ -119,6 +121,7 @@ class Edit extends Component {
    * @returns {string} Markup for the component.
    */
   render() {
+    const { blocks } = config;
     const { id, type, selected } = this.props;
     const required = isBoolean(this.props.data.required)
       ? this.props.data.required

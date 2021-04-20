@@ -1,33 +1,14 @@
 import codeSVG from '@plone/volto/icons/code.svg';
-import {
-  GridBlockDeprecatedEdit,
-  GridBlockDeprecatedView,
-} from './GridBlockDeprecated';
-import { GridBlockEdit, GridBlockView } from './GridBlock';
+import GridBlockEdit from './GridBlock/Edit';
+import GridBlockView from './GridBlock/View';
 
 import BlocksListWidget from './Widgets/BlocksListWidget';
 import ColorPickerWidget from './Widgets/ColorPickerWidget';
 import JsonTextWidget from './Widgets/JsonTextWidget';
 
-import { GRIDBLOCK_DEPRECATED, GRIDBLOCK } from './constants';
+import { GRIDBLOCK } from './constants';
 
 export default (config) => {
-  config.blocks.blocksConfig[GRIDBLOCK_DEPRECATED] = {
-    id: GRIDBLOCK_DEPRECATED,
-    title: 'Grid block deprecated',
-    icon: codeSVG,
-    group: 'text',
-    view: GridBlockDeprecatedView,
-    edit: GridBlockDeprecatedEdit,
-    restricted: false,
-    mostUsed: false,
-    security: {
-      addPermission: [],
-      view: [],
-    },
-    blockHasOwnFocusManagement: true,
-  };
-
   config.blocks.blocksConfig[GRIDBLOCK] = {
     id: GRIDBLOCK,
     title: 'Grid block',
@@ -37,6 +18,7 @@ export default (config) => {
     edit: GridBlockEdit,
     restricted: false,
     mostUsed: true,
+    sidebarTab: 1,
     security: {
       addPermission: [],
       view: [],
