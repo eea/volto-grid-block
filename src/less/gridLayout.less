@@ -6,111 +6,6 @@
 
 .loadAddonVariables();
 
-.grid-layout-deprecated {
-  display: flex;
-  width: 100% !important;
-  flex-flow: row wrap;
-  align-items: flex-start;
-  justify-content: inherit;
-  padding: 0rem;
-
-  .grid-block {
-    padding: 1em;
-    border: 1px dashed #ec776a;
-  }
-
-  .row {
-    position: relative;
-    display: flex;
-    width: 100%;
-    flex-flow: row wrap;
-    align-items: flex-start;
-    justify-content: inherit;
-    margin-top: 1.5rem;
-    text-align: left;
-
-    &.edit {
-      padding: 1em;
-      border: 1px dashed #4296b3;
-    }
-  }
-
-  .block-edit-wrapper {
-    position: relative;
-    height: 100%;
-    min-height: 60px;
-    border: 1px solid #c7d5d8;
-    background: transparent !important;
-    border-radius: 0;
-    box-shadow: 0px 1px 2px 0 #c7d5d8;
-
-    .block-edit-control {
-      text-align: center;
-
-      .icon {
-        cursor: pointer;
-
-        &:hover {
-          opacity: 0.9;
-        }
-      }
-    }
-
-    .block.image {
-      height: 80% !important;
-
-      > img {
-        height: 100% !important;
-      }
-    }
-  }
-
-  .block-edit-toolbar {
-    display: flex;
-    flex-flow: row;
-    align-items: center;
-    justify-content: space-between;
-    padding: 4px;
-    background: #4296b3;
-
-    .icon {
-      cursor: pointer;
-
-      &:hover {
-        opacity: 0.9;
-      }
-    }
-  }
-
-  .column {
-    &[data-rbd-draggable-context-id] {
-      margin-bottom: 0;
-    }
-  }
-
-  &:not(.edit) {
-    .block.image {
-      height: 100%;
-
-      .scene {
-        height: 80%;
-
-        .card {
-          height: 100%;
-
-          .card__face {
-            height: 100%;
-
-            img {
-              height: 100% !important;
-            }
-          }
-        }
-      }
-    }
-  }
-}
-
 @display: block, flex, grid, inline-block, initial, inherit, none;
 @display-position: relative, absolute, static, none;
 @align-items: stretch, center, flex-start, flex-end, baseline, initial, inherit;
@@ -304,44 +199,6 @@
   }
 }
 
-.blocks-list-widget {
-  .icon {
-    cursor: pointer;
-  }
-}
-
-.block-list-widget-control {
-  display: flex;
-  justify-content: space-between;
-  padding: 4px;
-  margin-top: 2px !important;
-  margin-bottom: 2px !important;
-  background: #4296b3;
-  border-radius: 4px;
-  color: #fff;
-
-  &.fullcontrol {
-    margin-bottom: 0 !important;
-    border-bottom-left-radius: 0;
-    border-bottom-right-radius: 0;
-  }
-
-  .control {
-    display: flex;
-    align-items: center;
-  }
-}
-
-.color-picker-widget {
-  display: flex;
-  flex-flow: column;
-  padding: 1em;
-}
-
-.color-picker-label {
-  margin-bottom: 1em;
-}
-
 .grid-layout {
   display: flex;
   width: 100% !important;
@@ -465,7 +322,39 @@
   }
 }
 
+.blocks-list-widget {
+  .icon {
+    cursor: pointer;
+  }
+}
+
+.block-list-widget-control {
+  display: flex;
+  justify-content: space-between;
+  padding: 4px;
+  margin-top: 2px !important;
+  margin-bottom: 2px !important;
+  background: #4296b3;
+  border-radius: 4px;
+  color: #fff;
+
+  &.fullcontrol {
+    margin-bottom: 0 !important;
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+  }
+
+  .control {
+    display: flex;
+    align-items: center;
+  }
+}
+
 .color-picker-widget {
+  display: flex;
+  flex-flow: column;
+  padding: 1em;
+
   .color-picker-toolbar {
     display: flex;
     flex-flow: row;
@@ -487,6 +376,10 @@
   .ui.toggle.checkbox label:after {
     z-index: 1;
   }
+}
+
+.color-picker-label {
+  margin-bottom: 1em;
 }
 
 .ui.modal .image.content {
