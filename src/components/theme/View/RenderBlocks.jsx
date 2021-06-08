@@ -8,7 +8,7 @@ import {
   hasBlocksData,
 } from '@plone/volto/helpers';
 import { getClasses, getStyle } from '@eeacms/volto-grid-block/helpers';
-import { blocks } from '~/config';
+import config from '@plone/volto/registry';
 import cx from 'classnames';
 
 const messages = defineMessages({
@@ -27,9 +27,9 @@ const RenderBlocks = (props) => {
     <>
       {map(content[blocksLayoutFieldname].items, (block) => {
         const Block =
-          blocks.blocksConfig[content[blocksFieldname]?.[block]?.['@type']]?.[
-            'view'
-          ] || null;
+          config.blocks.blocksConfig[
+            content[blocksFieldname]?.[block]?.['@type']
+          ]?.['view'] || null;
         const data = content[blocksFieldname][block];
         return Block !== null ? (
           <div
