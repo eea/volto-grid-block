@@ -5,8 +5,8 @@ import move from 'lodash-move';
 import { Grid, Button } from 'semantic-ui-react';
 import { Icon } from '@plone/volto/components';
 import InlineForm from '@plone/volto/components/manage/Form/InlineForm';
-import { DragDropList } from '@eeacms/volto-blocks-form/components';
-import { emptyBlocksForm } from '@eeacms/volto-blocks-form/helpers';
+import { DragDropList } from '@plone/volto/components';
+import { emptyBlocksForm } from '@plone/volto/helpers';
 import { getColumns } from '@eeacms/volto-grid-block/helpers';
 import cx from 'classnames';
 

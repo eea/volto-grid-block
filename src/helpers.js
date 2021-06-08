@@ -3,7 +3,7 @@ import isArray from 'lodash/isArray';
 import transform from 'css-to-react-native';
 import autoprefixer from 'autoprefixer';
 import postcss from 'postcss';
-import { emptyBlocksForm } from '@eeacms/volto-blocks-form/helpers';
+import { emptyBlocksForm } from '@plone/volto/helpers';
 
 export const cssParser = (css) => {
   return new Promise((resolve, reject) => {

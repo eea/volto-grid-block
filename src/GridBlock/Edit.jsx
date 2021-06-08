@@ -3,8 +3,8 @@ import { connect } from 'react-redux';
 import { SidebarPortal, Icon } from '@plone/volto/components';
 import { setSidebarTab } from '@plone/volto/actions';
 import InlineForm from '@plone/volto/components/manage/Form/InlineForm';
-import { BlocksForm } from '@eeacms/volto-blocks-form/components';
-import { emptyBlocksForm } from '@eeacms/volto-blocks-form/helpers';
+import { BlocksForm } from '@plone/volto/components';
+import { emptyBlocksForm } from '@plone/volto/helpers';
 import { GRIDBLOCK } from '@eeacms/volto-grid-block/constants';
 import {
   empty,
