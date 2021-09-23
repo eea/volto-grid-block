@@ -1,6 +1,6 @@
 {
   "name": "@eeacms/volto-grid-block",
-  "version": "1.1.1-centurion.0",
+  "version": "1.1.1-centurion.1",
   "description": "A Volto block that provides a grid layout for composite page",
   "main": "src/index.js",
   "author": "European Environment Agency: IDM2 A-Team",
