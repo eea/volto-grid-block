@@ -38,6 +38,7 @@ class Edit extends React.Component {
     this.onFullControl = this.onFullControl.bind(this);
     this.onAddBlock = this.onAddBlock.bind(this);
     this.onChangeBlock = this.onChangeBlock.bind(this);
+    this.onInsertBlock = this.onInsertBlock.bind(this);
     this.onMutateBlock = this.onMutateBlock.bind(this);
     this.onChangeField = this.onChangeField.bind(this);
     this.onFieldChanged = this.onFieldChanged.bind(this);
@@ -417,6 +418,11 @@ class Edit extends React.Component {
     return current;
   }
 
+  onInsertBlock(current, incoming) {
+    this.onMutateBlock(current, incoming)
+  }
+
+
   onChangeField(fieldName, newData) {
     if (fieldName === 'blocks' || fieldName === 'blocks_layout') {
       this.fieldsToBeChanged.current = {
@@ -617,6 +623,7 @@ class Edit extends React.Component {
                                 handleKeyDown={this.handleKeyDown}
                                 onAddBlock={this.onAddBlock}
                                 onChangeBlock={this.onChangeBlock}
+                                onInsertBlock={this.onInsertBlock}
                                 onMutateBlock={this.onMutateBlock}
                                 onChangeField={this.onChangeField}
                                 onDeleteBlock={this.onDeleteBlock}
